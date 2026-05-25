@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="Andalousie">
 <title>☀️ Andalousie 2026</title>
 <style>
-:root {
+:root{
   --orange:#B85A30;--orange-l:#FAECE7;--orange-d:#993C1D;
   --green:#3B6D11;--green-l:#EAF3DE;
   --teal:#0F6E56;--teal-l:#E1F5EE;
@@ -20,34 +20,50 @@
   --border:rgba(0,0,0,0.09);--border2:rgba(0,0,0,0.16);
   --r:12px;--rs:8px;
 }
-@media(prefers-color-scheme:dark){
-  :root{--bg:#1c1c1a;--card:#2a2a28;--text:#f0ede8;--text2:#b4b2a9;--text3:#888780;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.15);}
-}
+@media(prefers-color-scheme:dark){:root{--bg:#1c1c1a;--card:#2a2a28;--text:#f0ede8;--text2:#b4b2a9;--text3:#888780;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.15);}}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
 button{font-family:inherit;cursor:pointer;}
+.app{max-width:430px;margin:0 auto;padding-bottom:80px;}
 
-/* SCREENS */
+/* LOGIN */
+.login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem;background:var(--orange);}
+.login-screen h1{font-size:32px;font-weight:700;color:#fff;margin-bottom:8px;}
+.login-screen p{font-size:15px;color:rgba(255,255,255,0.8);margin-bottom:40px;text-align:center;}
+.login-btn{display:flex;align-items:center;gap:12px;background:#fff;color:#333;font-size:15px;font-weight:600;padding:14px 24px;border-radius:50px;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,0.15);}
+.login-error{color:#fff;font-size:13px;margin-top:16px;background:rgba(0,0,0,0.2);padding:8px 16px;border-radius:20px;display:none;}
+
+/* LOADING */
+.loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:var(--bg);}
+.spinner{width:36px;height:36px;border:3px solid var(--border2);border-top-color:var(--orange);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:12px;}
+@keyframes spin{to{transform:rotate(360deg)}}
 .screen{display:none;min-height:100vh;}
 .screen.active{display:block;}
 
-/* ── HOME ── */
-.home-header{background:var(--orange);padding:1.2rem 1.25rem 2rem;border-radius:0 0 24px 24px;}
+/* HEADER */
+.home-header{background:var(--orange);padding:1.2rem 1.25rem 1.8rem;border-radius:0 0 24px 24px;}
 .home-header h1{font-size:22px;font-weight:700;color:#fff;margin-bottom:2px;}
 .home-header p{font-size:13px;color:rgba(255,255,255,0.8);}
-.home-header .top-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
+.top-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
 .dates-badge{font-size:12px;color:rgba(255,255,255,0.85);background:rgba(255,255,255,0.18);padding:5px 12px;border-radius:20px;white-space:nowrap;}
 .prog-bar{background:rgba(255,255,255,0.2);border-radius:4px;height:6px;overflow:hidden;margin-bottom:5px;}
 .prog-fill{height:100%;background:rgba(255,255,255,0.85);transition:width .4s;border-radius:4px;}
 .prog-label{font-size:11px;color:rgba(255,255,255,0.65);}
+.user-row{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-bottom:10px;}
+.user-avatar{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,0.5);}
+.user-name{font-size:12px;color:rgba(255,255,255,0.85);}
+.logout-btn{font-size:11px;color:rgba(255,255,255,0.7);background:none;border:1px solid rgba(255,255,255,0.3);padding:3px 8px;border-radius:20px;}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;margin-right:4px;}
+.sync-dot.syncing{background:var(--amber);animation:pulse 1s infinite;}
+.sync-dot.error{background:var(--red);}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sync-label{font-size:11px;color:rgba(255,255,255,0.7);}
 
+/* DAYS */
 .home-body{padding:1rem;}
 .section-title{font-size:13px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin:1rem 0 .6rem;}
-
-/* Day cards on home */
-.day-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1rem;margin-bottom:8px;cursor:pointer;transition:border-color .15s;}
-.day-card:active{transform:scale(0.99);}
-.day-card.done-day{opacity:.45;}
+.day-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1rem;margin-bottom:8px;cursor:pointer;}
+.day-card.done-day{opacity:.4;}
 .day-header-row{display:flex;align-items:center;gap:10px;}
 .dnum{width:34px;height:34px;border-radius:50%;background:var(--orange-l);color:var(--orange-d);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
 .dnum.done{background:var(--green-l);color:var(--green);}
@@ -68,24 +84,20 @@ button{font-family:inherit;cursor:pointer;}
 .done-strip h4{font-size:12px;color:var(--text3);font-weight:600;}
 .show-done-btn{font-size:12px;padding:4px 10px;border-radius:20px;border:1px solid var(--border2);background:var(--card);color:var(--text2);font-weight:600;}
 
-/* ── CITY PAGE ── */
+/* CITY */
 .city-header{background:var(--orange);padding:1rem 1.25rem 1.4rem;}
 .city-header .back-btn{display:flex;align-items:center;gap:6px;color:rgba(255,255,255,0.85);font-size:14px;font-weight:600;background:none;border:none;padding:0;margin-bottom:10px;}
 .city-header h2{font-size:20px;font-weight:700;color:#fff;}
 .city-header p{font-size:13px;color:rgba(255,255,255,0.8);margin-top:2px;}
 .city-body{padding:1rem;}
-
-/* Category tabs */
 .cat-tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:1rem;}
 .cat-tabs::-webkit-scrollbar{display:none;}
 .cat-tab{flex-shrink:0;padding:6px 14px;border-radius:20px;font-size:13px;border:1px solid var(--border2);background:var(--card);color:var(--text2);font-weight:600;}
 .cat-tab.active{background:var(--orange);color:#fff;border-color:var(--orange);}
-
-/* POI cards */
 .poi-list{display:none;}
 .poi-list.active{display:block;}
 .poi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1rem;margin-bottom:8px;}
-.poi-card .poi-top{display:flex;align-items:flex-start;gap:10px;}
+.poi-top{display:flex;align-items:flex-start;gap:10px;}
 .poi-emoji{font-size:24px;flex-shrink:0;margin-top:2px;}
 .poi-info{flex:1;min-width:0;}
 .poi-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px;}
@@ -96,8 +108,6 @@ button{font-family:inherit;cursor:pointer;}
 .poi-tag.price{background:var(--green-l);color:var(--green);}
 .poi-tag.must{background:var(--orange-l);color:var(--orange-d);}
 .poi-map-btn{display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:5px 10px;border-radius:var(--rs);border:1px solid var(--blue);color:var(--blue);background:var(--blue-l);font-weight:600;margin-top:8px;}
-
-/* Add POI */
 .add-poi-btn{width:100%;font-size:13px;padding:11px;border-radius:var(--rs);border:1px dashed var(--border2);background:var(--bg);color:var(--text2);font-weight:600;margin-top:4px;}
 .add-form{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1rem;margin-top:8px;display:none;}
 .add-form.open{display:block;}
@@ -109,19 +119,21 @@ button{font-family:inherit;cursor:pointer;}
 .form-btns{display:flex;gap:8px;margin-top:4px;}
 .form-btns button{flex:1;font-size:14px;padding:9px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--bg);color:var(--text);font-weight:600;}
 .form-btns button.primary{background:var(--orange);color:#fff;border-color:var(--orange);}
+.mark-done-btn{width:100%;font-size:13px;padding:9px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--bg);color:var(--text2);font-weight:600;margin-top:1rem;}
+.mark-done-btn.is-done{background:var(--green-l);color:var(--green);border-color:var(--green);}
 
-/* Park4night block */
+/* P4N */
 .p4n-block{background:var(--teal-l);border:1px solid var(--teal);border-radius:var(--r);padding:1rem;margin-bottom:1rem;}
 .p4n-block-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
 .p4n-block-header h4{font-size:14px;font-weight:700;color:var(--teal);margin:0;}
-.p4n-search-btn{font-size:12px;padding:5px 12px;border-radius:var(--rs);border:none;background:var(--teal);color:#fff;font-weight:700;white-space:nowrap;}
+.p4n-search-btn{font-size:12px;padding:5px 12px;border-radius:var(--rs);border:none;background:var(--teal);color:#fff;font-weight:700;}
 .p4n-spot{background:var(--card);border-radius:var(--rs);padding:9px 11px;margin-bottom:7px;border:1px solid rgba(15,110,86,0.15);}
 .p4n-spot:last-child{margin-bottom:0;}
 .p4n-spot-name{font-size:13px;font-weight:700;color:var(--teal);}
 .p4n-spot-desc{font-size:12px;color:var(--text2);margin-top:2px;line-height:1.4;}
 .p4n-spot-link{display:inline-block;font-size:12px;color:var(--teal);font-weight:600;margin-top:6px;text-decoration:underline;cursor:pointer;}
 
-/* Alert box */
+/* ALERT */
 .alert-box{background:var(--amber-l);border:1px solid var(--amber-m);border-radius:var(--r);padding:11px 13px;margin-bottom:1rem;cursor:pointer;}
 .alert-hdr{display:flex;align-items:center;gap:7px;}
 .alert-title{font-size:13px;font-weight:700;color:var(--amber-d);flex:1;}
@@ -136,17 +148,13 @@ button{font-family:inherit;cursor:pointer;}
 .avoid-t{display:inline-block;background:var(--red-l);color:var(--red);border-radius:4px;font-size:11px;padding:1px 5px;}
 .ok-t{display:inline-block;background:var(--green-l);color:var(--green);border-radius:4px;font-size:11px;padding:1px 5px;}
 
-/* Day done button */
-.day-done-row{display:flex;gap:8px;margin-top:10px;}
-.mark-done-btn{flex:1;font-size:13px;padding:9px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--bg);color:var(--text2);font-weight:600;}
-.mark-done-btn.is-done{background:var(--green-l);color:var(--green);border-color:var(--green);}
-
-/* ── BILLETS ── */
+/* PAGES */
 .page-header{background:var(--orange);padding:1rem 1.25rem 1.2rem;}
 .page-header h2{font-size:20px;font-weight:700;color:#fff;}
 .page-header p{font-size:13px;color:rgba(255,255,255,0.8);margin-top:2px;}
 .page-body{padding:1rem;}
 
+/* BILLETS */
 .billet-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1rem;margin-bottom:8px;}
 .bi-top{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
 .bi-emoji{font-size:20px;}
@@ -159,33 +167,13 @@ button{font-family:inherit;cursor:pointer;}
 .bi-actions{display:flex;gap:6px;margin-top:8px;}
 .bi-view-btn{font-size:12px;padding:5px 10px;border-radius:var(--rs);border:1px solid var(--blue);color:var(--blue);background:var(--blue-l);font-weight:600;}
 .bi-del-btn{font-size:12px;padding:5px 10px;border-radius:var(--rs);border:1px solid var(--border2);color:var(--text3);background:var(--bg);font-weight:600;}
-
 .add-billet-btn{width:100%;font-size:14px;padding:11px;border-radius:var(--rs);border:1px dashed var(--border2);background:var(--bg);color:var(--text2);font-weight:600;margin-bottom:8px;}
 .billet-add-form{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:10px;display:none;}
 .billet-add-form.open{display:block;}
 
-/* File preview modal */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:flex-end;justify-content:center;z-index:300;}
-.modal-overlay.open{display:flex;}
-.modal-sheet{background:var(--card);border-radius:20px 20px 0 0;padding:1.25rem;width:100%;max-height:85vh;overflow-y:auto;}
-.modal-sheet h3{font-size:16px;font-weight:700;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
-.modal-close{font-size:22px;color:var(--text3);background:none;border:none;padding:0;}
-.file-preview{width:100%;border-radius:var(--rs);border:1px solid var(--border);min-height:200px;background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden;}
-.file-preview img{width:100%;border-radius:var(--rs);}
-.file-preview iframe{width:100%;height:400px;border:none;border-radius:var(--rs);}
-.file-preview .no-preview{font-size:13px;color:var(--text3);text-align:center;padding:2rem;}
-
-/* Addr modal */
-.addr-modal{background:var(--card);border-radius:20px 20px 0 0;padding:1.25rem;width:100%;}
-.addr-modal h3{font-size:16px;font-weight:700;margin-bottom:8px;color:var(--text);}
-.addr-modal p{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:16px;}
-.addr-btns{display:flex;gap:8px;}
-.addr-btn{flex:1;font-size:14px;padding:10px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--bg);color:var(--text);font-weight:600;}
-.addr-btn.primary{background:var(--blue);color:#fff;border-color:var(--blue);}
-
-/* ── BUDGET ── */
+/* BUDGET */
 .tricount-banner{background:var(--purple-l);border:1px solid #AFA9EC;border-radius:var(--r);padding:1rem;margin-bottom:1rem;display:flex;align-items:center;gap:12px;}
-.tricount-banner .tc-text{flex:1;}
+.tc-text{flex:1;}
 .tricount-banner h4{font-size:14px;font-weight:700;color:var(--purple);}
 .tricount-banner p{font-size:12px;color:var(--purple);margin-top:2px;opacity:.8;}
 .tc-btn{font-size:13px;padding:8px 14px;border-radius:var(--rs);border:none;background:var(--purple);color:#fff;font-weight:700;white-space:nowrap;}
@@ -198,24 +186,99 @@ button{font-family:inherit;cursor:pointer;}
 .brow{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border);}
 .brow:last-child{border-bottom:none;font-weight:700;}
 
+/* FUN */
+.fun-section{margin-bottom:1.4rem;}
+.fun-section h3{font-size:15px;font-weight:700;color:var(--text);margin-bottom:.8rem;display:flex;align-items:center;gap:6px;}
+.bingo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px;}
+.bingo-cell{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:8px 4px;text-align:center;cursor:pointer;transition:all .15s;}
+.bingo-cell.checked{background:var(--orange);border-color:var(--orange);}
+.bc-emoji{font-size:18px;display:block;margin-bottom:3px;}
+.bc-label{font-size:10px;color:var(--text2);line-height:1.2;}
+.bingo-cell.checked .bc-label{color:rgba(255,255,255,0.9);}
+.bingo-win{background:var(--green-l);border:1px solid var(--green);border-radius:var(--r);padding:.8rem;font-size:14px;font-weight:700;color:var(--green);text-align:center;display:none;margin-bottom:8px;animation:popIn .3s ease;}
+.bingo-win.show{display:block;}
+@keyframes popIn{from{transform:scale(0.9);opacity:0}to{transform:scale(1);opacity:1}}
+.reset-bingo{font-size:12px;padding:6px 14px;border-radius:20px;border:1px solid var(--border2);background:var(--bg);color:var(--text3);font-weight:600;}
+.defi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem;margin-bottom:8px;}
+.defi-text{font-size:15px;font-weight:600;color:var(--text);line-height:1.6;margin-bottom:12px;min-height:60px;}
+.defi-btn{font-size:13px;padding:9px 18px;border-radius:var(--rs);border:none;background:var(--orange);color:#fff;font-weight:700;}
+.dico-search{width:100%;font-size:15px;padding:11px 14px;border:1px solid var(--border2);border-radius:var(--r);background:var(--card);color:var(--text);font-family:inherit;margin-bottom:10px;-webkit-appearance:none;}
+.dico-results{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.dico-item{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.dico-item:last-child{border-bottom:none;}
+.dico-es{font-size:14px;font-weight:700;color:var(--orange);}
+.dico-fr{font-size:13px;color:var(--text2);text-align:right;}
+.dico-phon{font-size:11px;color:var(--text3);margin-top:2px;}
+.dico-empty{font-size:13px;color:var(--text3);text-align:center;padding:1.5rem;}
 
+/* MODALS */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:flex-end;justify-content:center;z-index:300;}
+.modal-overlay.open{display:flex;}
+.modal-sheet{background:var(--card);border-radius:20px 20px 0 0;padding:1.25rem;width:100%;max-height:85vh;overflow-y:auto;}
+.modal-sheet h3{font-size:16px;font-weight:700;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
+.modal-close{font-size:22px;color:var(--text3);background:none;border:none;padding:0;}
+.file-preview{width:100%;border-radius:var(--rs);min-height:200px;background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.file-preview img{width:100%;}
+.file-preview iframe{width:100%;height:400px;border:none;}
+.no-preview{font-size:13px;color:var(--text3);text-align:center;padding:2rem;}
+.addr-modal{background:var(--card);border-radius:20px 20px 0 0;padding:1.25rem;width:100%;}
+.addr-modal h3{font-size:16px;font-weight:700;margin-bottom:8px;color:var(--text);}
+.addr-modal p{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:16px;}
+.addr-btns{display:flex;gap:8px;}
+.addr-btn{flex:1;font-size:14px;padding:10px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--bg);color:var(--text);font-weight:600;}
+.addr-btn.primary{background:var(--blue);color:#fff;border-color:var(--blue);}
+.confirm-modal{background:var(--card);border-radius:20px 20px 0 0;padding:1.5rem 1.25rem;width:100%;text-align:center;}
+.confirm-modal .cm-emoji{font-size:40px;margin-bottom:10px;}
+.confirm-modal h3{font-size:17px;font-weight:700;margin-bottom:8px;color:var(--text);}
+.confirm-modal p{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:20px;}
+.confirm-btns{display:flex;gap:8px;}
+.confirm-btn{flex:1;font-size:14px;padding:11px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--bg);color:var(--text);font-weight:600;}
+.confirm-btn.danger{background:var(--red-l);color:var(--red);border-color:var(--red);}
+.confirm-btn.safe{background:var(--orange);color:#fff;border-color:var(--orange);}
+
+/* NAV */
 .nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--card);border-top:1px solid var(--border);display:flex;padding:8px 0 max(14px,env(safe-area-inset-bottom));z-index:100;}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;color:var(--text3);font-size:10px;font-weight:600;}
 .nav-icon{font-size:22px;line-height:1;}
 .nav-item.active{color:var(--orange);}
-
-.app{max-width:430px;margin:0 auto;padding-bottom:80px;}
 </style>
 </head>
 <body>
+
+<!-- LOGIN -->
+<div id="login-screen" class="login-screen" style="display:none">
+  <div style="font-size:60px;margin-bottom:16px;">☀️</div>
+  <h1>Andalousie 2026</h1>
+  <p>Connecte-toi pour accéder<br>à ton app de voyage</p>
+  <button class="login-btn" onclick="signInWithGoogle()">
+    <img src="https://www.google.com/favicon.ico" alt="G" style="width:20px;height:20px;">
+    Continuer avec Google
+  </button>
+  <div class="login-error" id="login-error"></div>
+</div>
+
+<!-- LOADING -->
+<div id="loading-screen" class="loading-screen">
+  <div class="spinner"></div>
+  <div style="font-size:13px;color:var(--text3);">Chargement…</div>
+</div>
+
+<!-- APP -->
+<div id="main-app" style="display:none">
 <div class="app">
 
-<!-- ══ SCREEN: HOME ══ -->
+<!-- HOME -->
 <div class="screen active" id="screen-home">
   <div class="home-header">
+    <div class="user-row">
+      <img class="user-avatar" id="user-avatar" src="" alt="">
+      <span class="user-name" id="user-name"></span>
+      <span><span class="sync-dot" id="sync-dot"></span><span class="sync-label" id="sync-label">Synchronisé</span></span>
+      <button class="logout-btn" onclick="signOut()">Déco</button>
+    </div>
     <div class="top-row">
       <div><h1>☀️ Andalousie 2026</h1><p>Van trip · Anaïs & Audrey en vadrouille</p></div>
-      <div class="dates-badge">6–21 juin</div>
+      <div class="dates-badge">6–20 juin</div>
     </div>
     <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
     <div class="prog-label" id="progLabel">0 / 15 jours</div>
@@ -231,12 +294,12 @@ button{font-family:inherit;cursor:pointer;}
   </div>
 </div>
 
-<!-- ══ SCREEN: CITY ══ -->
+<!-- CITY -->
 <div class="screen" id="screen-city">
   <div class="city-header">
     <button class="back-btn" onclick="goHome()">← Retour</button>
-    <h2 id="city-title">Cordoue</h2>
-    <p id="city-subtitle">Dim 7 juin · Camping</p>
+    <h2 id="city-title"></h2>
+    <p id="city-subtitle"></p>
   </div>
   <div class="city-body">
     <div id="city-p4n-banner" style="display:none"></div>
@@ -256,43 +319,28 @@ button{font-family:inherit;cursor:pointer;}
     <button class="add-poi-btn" onclick="toggleAddPoi()">＋ Ajouter une adresse</button>
     <div class="add-form" id="add-poi-form">
       <div class="form-field"><label>Catégorie</label>
-        <select id="poi-cat">
-          <option value="voir">👁 À voir</option>
-          <option value="faire">🥾 À faire</option>
-          <option value="rando">🗺 Itinéraire à pied</option>
-          <option value="manger">🍽 Restaurant</option>
-          <option value="bar">🍸 Bar / Glacier</option>
-        </select>
+        <select id="poi-cat"><option value="voir">👁 À voir</option><option value="faire">🥾 À faire</option><option value="rando">🗺 Itinéraire</option><option value="manger">🍽 Restaurant</option><option value="bar">🍸 Bar / Glacier</option></select>
       </div>
       <div class="form-field"><label>Nom</label><input type="text" id="poi-name" placeholder="Ex: Bar El Gato Negro"></div>
       <div class="form-field"><label>Description</label><textarea id="poi-desc" placeholder="Notes, horaires, conseil..."></textarea></div>
       <div class="form-row2">
-        <div class="form-field"><label>Durée / Prix</label><input type="text" id="poi-dur" placeholder="Ex: 1h30 / gratuit"></div>
+        <div class="form-field"><label>Durée / Prix</label><input type="text" id="poi-dur" placeholder="1h30 / gratuit"></div>
         <div class="form-field"><label>Lien Maps</label><input type="url" id="poi-url" placeholder="https://maps.google..."></div>
       </div>
-      <div class="form-btns">
-        <button class="primary" onclick="savePoi()">Ajouter</button>
-        <button onclick="toggleAddPoi()">Annuler</button>
-      </div>
+      <div class="form-btns"><button class="primary" onclick="savePoi()">Ajouter</button><button onclick="toggleAddPoi()">Annuler</button></div>
     </div>
-    <div id="city-done-row" style="margin-top:1rem;"></div>
+    <div id="city-done-row"></div>
   </div>
 </div>
 
-<!-- ══ SCREEN: BILLETS ══ -->
+<!-- BILLETS -->
 <div class="screen" id="screen-billets">
   <div class="page-header"><h2>🎟 Billets & Réservations</h2><p>Tous tes documents de voyage</p></div>
   <div class="page-body">
-    <button class="add-billet-btn" onclick="toggleBilletForm()">＋ Ajouter un billet / réservation</button>
+    <button class="add-billet-btn" onclick="toggleBilletForm()">＋ Ajouter un billet</button>
     <div class="billet-add-form" id="billet-add-form">
       <div class="form-field"><label>Type</label>
-        <select id="b-type">
-          <option value="avion">✈️ Avion</option>
-          <option value="camping">⛺ Camping</option>
-          <option value="hotel">🏨 Hôtel</option>
-          <option value="activite">🎟 Activité</option>
-          <option value="autre">📄 Autre</option>
-        </select>
+        <select id="b-type"><option value="avion">✈️ Avion</option><option value="camping">⛺ Camping</option><option value="hotel">🏨 Hôtel</option><option value="activite">🎟 Activité</option><option value="autre">📄 Autre</option></select>
       </div>
       <div class="form-field"><label>Nom</label><input type="text" id="b-name" placeholder="Ex: Vol Paris → Málaga"></div>
       <div class="form-row2">
@@ -309,7 +357,7 @@ button{font-family:inherit;cursor:pointer;}
   </div>
 </div>
 
-<!-- ══ SCREEN: BUDGET ══ -->
+<!-- BUDGET -->
 <div class="screen" id="screen-budget">
   <div class="page-header"><h2>💶 Budget</h2><p>Estimations pour le voyage</p></div>
   <div class="page-body">
@@ -343,7 +391,34 @@ button{font-family:inherit;cursor:pointer;}
   </div>
 </div>
 
-<!-- Modals -->
+<!-- FUN -->
+<div class="screen" id="screen-fun">
+  <div class="page-header"><h2>🎉 Fun</h2><p>Jeux & espagnol pour la route</p></div>
+  <div class="page-body">
+    <div class="fun-section">
+      <h3>🎯 Bingo du voyage</h3>
+      <div class="bingo-win" id="bingo-win">🎉 BINGO ! Vous avez gagné !</div>
+      <div class="bingo-grid" id="bingo-grid"></div>
+      <button class="reset-bingo" onclick="resetBingo()">↺ Recommencer</button>
+    </div>
+    <div class="fun-section">
+      <h3>⚡ Défi du moment</h3>
+      <div class="defi-card">
+        <div class="defi-text" id="defi-text">Appuie sur le bouton pour recevoir ton défi !</div>
+        <button class="defi-btn" onclick="newDefi()">🎲 Nouveau défi</button>
+      </div>
+    </div>
+    <div class="fun-section">
+      <h3>🇪🇸 Dictionnaire de voyage</h3>
+      <input class="dico-search" type="text" placeholder="Cherche un mot en français ou espagnol…" oninput="searchDico(this.value)">
+      <div id="dico-results" class="dico-results"><div class="dico-empty">Tape un mot pour chercher 🔍</div></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- .app -->
+
+<!-- MODALS -->
 <div class="modal-overlay" id="file-modal" onclick="closeFileModal()">
   <div class="modal-sheet" onclick="event.stopPropagation()">
     <h3><span id="file-modal-title">Document</span><button class="modal-close" onclick="closeFileModal()">×</button></h3>
@@ -361,13 +436,13 @@ button{font-family:inherit;cursor:pointer;}
   </div>
 </div>
 <div class="modal-overlay" id="delete-modal" onclick="closeDeleteModal()">
-  <div class="addr-modal" onclick="event.stopPropagation()" style="text-align:center;">
-    <div style="font-size:36px;margin-bottom:10px;">🗑️</div>
-    <h3 style="justify-content:center;margin-bottom:8px;">Supprimer ce billet ?</h3>
-    <p style="font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:18px;">Es-tu sûr de vouloir supprimer ce billet ?<br><strong style="color:var(--orange)">Anaïs ne va pas être contente !!</strong> 😤</p>
-    <div class="addr-btns">
-      <button class="addr-btn" style="background:var(--red-l);color:var(--red);border-color:var(--red);" onclick="confirmDeleteBillet()">Oui, supprimer</button>
-      <button class="addr-btn primary" onclick="closeDeleteModal()">Non, annuler</button>
+  <div class="confirm-modal" onclick="event.stopPropagation()">
+    <div class="cm-emoji">🗑️</div>
+    <h3>Supprimer ce billet ?</h3>
+    <p>Es-tu sûr de vouloir supprimer ce billet ?<br><strong style="color:var(--orange)">Anaïs ne va pas être contente !!</strong> 😤</p>
+    <div class="confirm-btns">
+      <button class="confirm-btn danger" onclick="confirmDeleteBillet()">Oui, supprimer</button>
+      <button class="confirm-btn safe" onclick="closeDeleteModal()">Non, annuler</button>
     </div>
   </div>
 </div>
@@ -377,665 +452,268 @@ button{font-family:inherit;cursor:pointer;}
   <div class="nav-item active" id="nav-home" onclick="showScreen('home')"><div class="nav-icon">🗺</div>Voyage</div>
   <div class="nav-item" id="nav-billets" onclick="showScreen('billets')"><div class="nav-icon">🎟</div>Billets</div>
   <div class="nav-item" id="nav-budget" onclick="showScreen('budget')"><div class="nav-icon">💶</div>Budget</div>
+  <div class="nav-item" id="nav-fun" onclick="showScreen('fun')"><div class="nav-icon">🎉</div>Fun</div>
 </nav>
-</div>
 
-<script>
-// ─────────────────────────────────────────────
-// DATA
-// ─────────────────────────────────────────────
-const days = [
-{id:0,date:"Sam 6 juin",j:1,dest:"Environs de Cordoue",type:"nature",
- p4n:"https://park4night.com/fr/place/105354",addr:null,alert:null,
- city:{
-  voir:[
-    {e:"🏛",name:"Medina Azahara",desc:"Ancienne cité palatiale du califat de Cordoue, classée UNESCO. À 8 km du centre.",dur:"2h",price:"Payant",must:true,maps:"https://maps.google.com/?q=Medina+Azahara+Cordoba"},
-    {e:"🏘",name:"Zuheros",desc:"L'un des plus beaux villages blancs d'Andalousie, niché dans les falaises.",dur:"1h30",price:"Gratuit",must:false,maps:"https://maps.google.com/?q=Zuheros+Spain"},
-  ],
-  faire:[
-    {e:"🚐",name:"Installation du van",desc:"Récupération du van à l'aéroport (20 min), courses au supermarché, installation.",dur:"2h",price:"",must:true,maps:null},
-  ],
-  rando:[],
-  manger:[
-    {e:"🍽",name:"Mesón Zuheros",desc:"Restaurant typique dans le village blanc de Zuheros. Cuisine andalouse authentique.",dur:"",price:"€€",must:false,maps:"https://maps.google.com/?q=Meson+Zuheros"},
-  ],
-  bar:[],
- }
-},
-{id:1,date:"Dim 7 juin",j:2,dest:"Cordoue",type:"nature",
- p4n:"https://park4night.com/fr/search#13/37.888/-4.779",addr:{name:"Parking Mezquita",val:"Calle Cairuán, 14003 Córdoba"},alert:null,
- city:{
-  voir:[
-    {e:"🕌",name:"Mezquita-Catedral",desc:"Chef-d'œuvre de l'architecture islamique, incontournable. Réserver à l'avance.",dur:"2h",price:"12€",must:true,maps:"https://maps.google.com/?q=Mezquita+Cordoba"},
-    {e:"🌸",name:"Patios de Cordoue",desc:"En juin, les patios fleuris sont ouverts au public. Balade magique dans les ruelles.",dur:"1h30",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Patios+Cordoba"},
-    {e:"🏰",name:"Alcázar des Rois Chrétiens",desc:"Forteresse médiévale avec jardins et fontaines, vue imprenable.",dur:"1h30",price:"5€",must:false,maps:"https://maps.google.com/?q=Alcazar+Cordoba"},
-  ],
-  faire:[
-    {e:"🚶",name:"Balade quartier Judería",desc:"Flânerie dans les ruelles blanches de l'ancien quartier juif. Gratuit et magnifique.",dur:"1h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Juderia+Cordoba"},
-  ],
-  rando:[
-    {e:"🗺",name:"Circuit historique à pied",desc:"Mezquita → Judería → Alcázar → Pont Romain → Torre de la Calahorra. ~3 km, 2h.",dur:"2h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Puente+Romano+Cordoba"},
-  ],
-  manger:[
-    {e:"🍽",name:"Taberna Salinas",desc:"Institution de Cordoue depuis 1879. Salmorejo, rabo de toro. Réserver.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Taberna+Salinas+Cordoba"},
-    {e:"🍽",name:"Casa Pepe de la Judería",desc:"Vue sur la Mezquita, cuisine traditionnelle de qualité.",dur:"",price:"€€€",must:false,maps:"https://maps.google.com/?q=Casa+Pepe+Juderia+Cordoba"},
-  ],
-  bar:[
-    {e:"🍸",name:"Bar Santos",desc:"La terrasse incontournable face à la Mezquita. Tortilla réputée.",dur:"",price:"€",must:true,maps:"https://maps.google.com/?q=Bar+Santos+Cordoba"},
-    {e:"🍦",name:"Helados Joyero",desc:"La meilleure glace de Cordoue selon les locaux.",dur:"",price:"€",must:false,maps:"https://maps.google.com/?q=Helados+Joyero+Cordoba"},
-  ],
- }
-},
-{id:2,date:"Lun 8 juin",j:3,dest:"Baeza & Úbeda",type:"nature",
- p4n:"https://park4night.com/fr/search#13/37.994/-3.472",addr:null,alert:null,
- city:{
-  voir:[
-    {e:"🏛",name:"Plaza del Pópulo — Baeza",desc:"Superbe place Renaissance avec fontaine et cathédrale. Cœur de la ville.",dur:"1h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Plaza+Populo+Baeza"},
-    {e:"🏛",name:"Plaza de Vázquez de Molina — Úbeda",desc:"L'une des plus belles places Renaissance d'Espagne. Classée UNESCO.",dur:"1h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Plaza+Vazquez+Molina+Ubeda"},
-    {e:"⛪",name:"Sacra Capilla del Salvador — Úbeda",desc:"Joyau de la Renaissance espagnole. Architecture époustouflante.",dur:"45min",price:"6€",must:true,maps:"https://maps.google.com/?q=Capilla+Salvador+Ubeda"},
-  ],
-  faire:[],
-  rando:[
-    {e:"🗺",name:"Baeza → Úbeda en voiture",desc:"Route panoramique de 10 km entre les deux villes. Nombreux points de vue sur les oliveraies.",dur:"30min",price:"Gratuit",must:false,maps:"https://maps.google.com/?q=Ubeda+Spain"},
-  ],
-  manger:[
-    {e:"🍽",name:"Vandelvira — Baeza",desc:"Restaurant dans un ancien couvent. Spécialités locales, bon rapport qualité/prix.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Restaurante+Vandelvira+Baeza"},
-  ],
-  bar:[
-    {e:"☕",name:"Café Mercantil — Úbeda",desc:"Café historique de la ville, terrasse agréable sur la place.",dur:"",price:"€",must:false,maps:"https://maps.google.com/?q=Cafe+Mercantil+Ubeda"},
-  ],
- }
-},
-{id:3,date:"Mar 9 juin",j:4,dest:"Grenade",type:"camping",
- p4n:null,addr:{name:"Camping Granada",val:"Avenida de los Olivos s/n, 18013 Granada"},alert:"granada",
- city:{
-  voir:[
-    {e:"🎸",name:"Sacromonte",desc:"Quartier des grottes troglodytes, berceau du flamenco. Balade en soirée incontournable.",dur:"2h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Sacromonte+Granada"},
-    {e:"🕌",name:"Albaicín",desc:"Quartier maure classé UNESCO. Rues pavées et maisons blanches avec vues sur l'Alhambra.",dur:"2h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Albaicin+Granada"},
-  ],
-  faire:[
-    {e:"💃",name:"Spectacle flamenco à Sacromonte",desc:"Peña La Platería ou Cueva de la Rocío. Réserver en avance. Ambiance unique.",dur:"1h30",price:"25-35€",must:true,maps:"https://maps.google.com/?q=Sacromonte+Granada"},
-  ],
-  rando:[
-    {e:"🗺",name:"Albaicín → Mirador San Nicolás",desc:"Montée dans les ruelles de l'Albaicín jusqu'au plus beau point de vue sur l'Alhambra. 1,5 km.",dur:"1h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Mirador+San+Nicolas+Granada"},
-  ],
-  manger:[
-    {e:"🍽",name:"Bar Los Diamantes",desc:"Le meilleur bar à tapas de Grenade. Tapas offertes avec chaque verre. Très populaire.",dur:"",price:"€",must:true,maps:"https://maps.google.com/?q=Bar+Los+Diamantes+Granada"},
-    {e:"🍽",name:"Restaurante Chikito",desc:"Institution grenadin, spécialités locales. Federico García Lorca y avait ses habitudes.",dur:"",price:"€€",must:false,maps:"https://maps.google.com/?q=Restaurante+Chikito+Granada"},
-  ],
-  bar:[
-    {e:"🍸",name:"El Ladrillo",desc:"Bar à tapas animé dans le centre. Ambiance locale, pas touristique.",dur:"",price:"€",must:false,maps:"https://maps.google.com/?q=El+Ladrillo+Granada"},
-    {e:"🫖",name:"Tetería Nazarí",desc:"Salon de thé marocain dans le quartier árabe. Douceurs et thé à la menthe.",dur:"",price:"€",must:true,maps:"https://maps.google.com/?q=Teteria+Nazari+Granada"},
-  ],
- }
-},
-{id:4,date:"Mer 10 juin",j:5,dest:"Grenade — Alhambra",type:"camping",
- p4n:null,addr:{name:"Camping Granada",val:"Avenida de los Olivos s/n, 18013 Granada"},alert:null,
- city:{
-  voir:[
-    {e:"🏯",name:"Alhambra & Palais Nasrides",desc:"L'un des monuments les plus visités d'Espagne. Billets confirmés ! Arriver 15 min avant.",dur:"3-4h",price:"Réservé",must:true,maps:"https://maps.google.com/?q=Alhambra+Granada"},
-    {e:"🌿",name:"Generalife",desc:"Les jardins de l'Alhambra. Fontaines, roses et cyprès. Inclus dans le billet.",dur:"1h",price:"Inclus",must:true,maps:"https://maps.google.com/?q=Generalife+Granada"},
-  ],
-  faire:[
-    {e:"👁",name:"Mirador de la Silla del Moro",desc:"Vue panoramique sur l'Alhambra depuis le château Mauresque. Moins connu, plus beau.",dur:"1h30",price:"Gratuit",must:false,maps:"https://maps.google.com/?q=Silla+del+Moro+Granada"},
-  ],
-  rando:[
-    {e:"🗺",name:"Bosque de la Alhambra",desc:"Forêt entourant l'Alhambra. Balade fraîche parmi les ormes et fontaines. 2 km.",dur:"45min",price:"Gratuit",must:false,maps:"https://maps.google.com/?q=Bosque+Alhambra+Granada"},
-  ],
-  manger:[
-    {e:"🍽",name:"Restaurante Mirador de Morayma",desc:"Vue sur l'Alhambra, cuisine grenadine traditionnelle. Cadre romantique.",dur:"",price:"€€€",must:true,maps:"https://maps.google.com/?q=Mirador+de+Morayma+Granada"},
-  ],
-  bar:[
-    {e:"🍸",name:"Taberna La Tana",desc:"Cave à vins exceptionnelle. Tapas et vins naturels dans une ambiance intime.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Taberna+La+Tana+Granada"},
-  ],
- }
-},
-{id:5,date:"Jeu 11 juin",j:6,dest:"Grenade — ville",type:"camping",
- p4n:null,addr:{name:"Camping Granada",val:"Avenida de los Olivos s/n, 18013 Granada"},alert:null,
- city:{
-  voir:[
-    {e:"⛪",name:"Cathédrale & Chapelle Royale",desc:"Sépulture des Rois Catholiques, Ferdinand et Isabelle. Art gothique exceptionnel.",dur:"1h30",price:"5€",must:true,maps:"https://maps.google.com/?q=Catedral+Granada"},
-    {e:"🛍",name:"Alcaicería",desc:"Ancien souk arabe reconverti en marché artisanal. Tissus, céramiques, épices.",dur:"1h",price:"Gratuit",must:false,maps:"https://maps.google.com/?q=Alcaiceria+Granada"},
-  ],
-  faire:[
-    {e:"🛁",name:"Hammam Al Ándalus",desc:"Bains arabes traditionnels. Massage et détente après 3 jours de van. Réserver.",dur:"2h",price:"35-60€",must:false,maps:"https://maps.google.com/?q=Hammam+Al+Andalus+Granada"},
-  ],
-  rando:[
-    {e:"🗺",name:"Centre historique — circuit à pied",desc:"Cathédrale → Bib-Rambla → Alcaicería → Corral del Carbón. ~2 km, facile.",dur:"1h30",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Plaza+Bib+Rambla+Granada"},
-  ],
-  manger:[
-    {e:"🍽",name:"Café Bib-Rambla",desc:"Terrasse sur la plus belle place de Grenade. Petit déj et déjeuner.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Cafe+Bib+Rambla+Granada"},
-  ],
-  bar:[
-    {e:"🍦",name:"Los Italianos",desc:"La gelateria de Grenade depuis 1936. File d'attente garantie mais ça vaut le coup !",dur:"",price:"€",must:true,maps:"https://maps.google.com/?q=Los+Italianos+Granada"},
-  ],
- }
-},
-{id:6,date:"Ven 12 juin",j:7,dest:"Alpujarra",type:"nature",
- p4n:"https://park4night.com/fr/search#13.5/36.93/-3.35",addr:null,alert:null,
- city:{
-  voir:[
-    {e:"🏘",name:"Pampaneira",desc:"Premier des trois villages des Alpujarras. Fontaine centrale, église baroque, ruelles fleuries.",dur:"1h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Pampaneira+Spain"},
-    {e:"🏘",name:"Bubión & Capileira",desc:"Villages perchés à 1300m d'altitude. Architecture berbère unique en Europe.",dur:"1h30",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Bubion+Spain"},
-  ],
-  faire:[
-    {e:"🧶",name:"Artisanat local",desc:"Les Alpujarras sont connues pour leurs tapis (jarapas) et tissages. Parfait pour un souvenir.",dur:"1h",price:"Variable",must:false,maps:null},
-  ],
-  rando:[
-    {e:"🗺",name:"GR7 : Pampaneira → Bubión → Capileira",desc:"Sentier de randonnée reliant les trois villages. 5 km, dénivelé 300m. Vues époustouflantes.",dur:"2h30",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Pampaneira+Spain"},
-  ],
-  manger:[
-    {e:"🍽",name:"Mesón Poqueira — Capileira",desc:"Vue sur la vallée, cuisine de montagne. Pluma ibérica et migas. Terrasse.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Meson+Poqueira+Capileira"},
-  ],
-  bar:[
-    {e:"☕",name:"Café Bar La Taha — Bubión",desc:"Bar local avec terrasse panoramique. Cafés et vins locaux.",dur:"",price:"€",must:false,maps:"https://maps.google.com/?q=Bubion+Spain"},
-  ],
- }
-},
-{id:7,date:"Sam 13 juin",j:8,dest:"Alpujarra → Málaga",type:"camping",
- p4n:null,addr:{name:"Camping La Sierrecilla",val:"Camino de la Mina s/n, 29013 Málaga"},alert:null,
- city:{
-  voir:[
-    {e:"🏘",name:"Frigiliana",desc:"Le plus beau village blanc de la Costa del Sol. Stop incontournable entre Alpujarra et Málaga.",dur:"1h30",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Frigiliana+Spain"},
-    {e:"🏙",name:"Centre de Málaga",desc:"Si vous arrivez en fin d'après-midi — Calle Larios et vieux port à explorer.",dur:"2h",price:"Gratuit",must:false,maps:"https://maps.google.com/?q=Centro+Malaga"},
-  ],
-  faire:[],
-  rando:[
-    {e:"🗺",name:"Frigiliana — village haut",desc:"Montée à pied dans les ruelles de la partie haute (Mudéjar). 30 min, splendide.",dur:"45min",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Frigiliana+Spain"},
-  ],
-  manger:[
-    {e:"🍽",name:"El Jardín — Frigiliana",desc:"Terrasse avec vue, cuisine méditerranéenne. Très prisé, arriver tôt.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=El+Jardin+Frigiliana"},
-  ],
-  bar:[
-    {e:"🍦",name:"Heladería Frigiliana",desc:"Glaces artisanales dans le village. La pistache et le citron sont excellentes.",dur:"",price:"€",must:false,maps:"https://maps.google.com/?q=Frigiliana+Spain"},
-  ],
- }
-},
-{id:8,date:"Dim 14 juin",j:9,dest:"El Torcal & Caminito",type:"nature",
- p4n:"https://park4night.com/en/place/323934",addr:null,alert:null,
- city:{
-  voir:[
-    {e:"🪨",name:"El Torcal de Antequera",desc:"Formations karstiques surréalistes. L'un des paysages les plus étranges d'Europe.",dur:"2h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=El+Torcal+Antequera"},
-    {e:"🏛",name:"Dolmens d'Antequera",desc:"Mégalithes préhistoriques classés UNESCO. Dolmen de Menga, 3500 ans av JC.",dur:"1h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Dolmenes+Antequera"},
-  ],
-  faire:[],
-  rando:[
-    {e:"🗺",name:"Sentier Rojo — El Torcal",desc:"Circuit balisé en rouge parmi les rochers karstiques. 4,5 km, facile-moyen.",dur:"2h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=El+Torcal+Antequera"},
-  ],
-  manger:[
-    {e:"🍽",name:"Restaurante El Torcal",desc:"À l'entrée du parc. Cuisine locale correcte, pratique après la rando.",dur:"",price:"€€",must:false,maps:"https://maps.google.com/?q=Restaurante+El+Torcal+Antequera"},
-  ],
-  bar:[],
- }
-},
-{id:9,date:"Lun 15 juin",j:10,dest:"Caminito del Rey",type:"camping",
- p4n:null,addr:{name:"Camping El Sur",val:"Carretera Ronda-Algeciras km 3, 29400 Ronda"},alert:null,
- city:{
-  voir:[
-    {e:"🥾",name:"Caminito del Rey",desc:"Passerelle vertigineuse accrochée aux falaises des gorges du Guadalhorce. Billet obligatoire !",dur:"4-5h",price:"10€",must:true,maps:"https://maps.google.com/?q=Caminito+del+Rey+Malaga"},
-  ],
-  faire:[
-    {e:"🏊",name:"Baignade dans le lac",desc:"En fin de parcours, possibilité de se baigner dans les eaux turquoises du lac Conde del Guadalhorce.",dur:"1h",price:"Gratuit",must:false,maps:null},
-  ],
-  rando:[
-    {e:"🗺",name:"Caminito del Rey — circuit complet",desc:"Point de départ Ardales → gorges → passerelles → Valle de Abdalajís. 7 km sens unique. Navette retour.",dur:"4h",price:"10€",must:true,maps:"https://maps.google.com/?q=Caminito+del+Rey+Malaga"},
-  ],
-  manger:[
-    {e:"🍽",name:"Bar El Kiosko — Ardales",desc:"Avant ou après le Caminito. Bocadillos et boissons fraîches. Simple et pratique.",dur:"",price:"€",must:false,maps:"https://maps.google.com/?q=Ardales+Spain"},
-  ],
-  bar:[],
- }
-},
-{id:10,date:"Mar 16 juin",j:11,dest:"Ronda + Villages blancs",type:"nature",
- p4n:"https://park4night.com/en/place/45297",addr:null,alert:null,
- city:{
-  voir:[
-    {e:"🌉",name:"Pont Neuf (Puente Nuevo)",desc:"Vertigineux pont du XVIIIe siècle enjambant la gorge du Tajo. Vue à couper le souffle.",dur:"30min",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Puente+Nuevo+Ronda"},
-    {e:"🏛",name:"Vieille ville de Ronda",desc:"La Ciudad, partie ancienne avec ses palais et son architecture arabe-chrétienne.",dur:"2h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Ciudad+Ronda+Spain"},
-    {e:"🏘",name:"Setenil de las Bodegas",desc:"Village construit sous les rochers. Maisons creusées dans la roche volcanique. Unique.",dur:"1h30",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Setenil+de+las+Bodegas"},
-    {e:"🏘",name:"Zahara de la Sierra",desc:"Village blanc perché, vue sur le lac turquoise. L'un des plus beaux d'Andalousie.",dur:"1h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Zahara+de+la+Sierra"},
-  ],
-  faire:[],
-  rando:[
-    {e:"🗺",name:"Gorge du Tajo — sentier",desc:"Descente dans la gorge depuis le pont Neuf. Vues uniques sur les falaises et le pont. 2 km AR.",dur:"1h30",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Tajo+de+Ronda"},
-  ],
-  manger:[
-    {e:"🍽",name:"Restaurante Albacara",desc:"Vue sur la gorge et la campagne. Cuisine gastronomique locale. Réserver.",dur:"",price:"€€€",must:false,maps:"https://maps.google.com/?q=Restaurante+Albacara+Ronda"},
-    {e:"🍽",name:"Bodega El Socorro — Setenil",desc:"Bodega dans la roche. Vins et charcuteries locaux sous la falaise.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Setenil+de+las+Bodegas"},
-  ],
-  bar:[
-    {e:"☕",name:"Café Faustino — Ronda",desc:"Bar historique sur le Paseo Blas Infante. Terrasse avec vue.",dur:"",price:"€",must:false,maps:"https://maps.google.com/?q=Paseo+Blas+Infante+Ronda"},
-  ],
- }
-},
-{id:11,date:"Mer 17 juin",j:12,dest:"Jerez + Séville",type:"hotel",
- p4n:null,addr:null,alert:null,
- city:{
-  voir:[
-    {e:"🐴",name:"Real Escuela Andaluza — Jerez",desc:"École équestre royale. Spectacle de dressage le matin. Réserver.",dur:"1h30",price:"20€",must:true,maps:"https://maps.google.com/?q=Real+Escuela+Andaluza+Jerez"},
-    {e:"🍷",name:"Bodegas González Byass",desc:"Visite de la plus célèbre bodega de Jerez. Dégustation de sherry.",dur:"1h30",price:"18€",must:false,maps:"https://maps.google.com/?q=Gonzalez+Byass+Jerez"},
-  ],
-  faire:[],
-  rando:[],
-  manger:[
-    {e:"🍽",name:"La Carbona — Jerez",desc:"Dans une ancienne bodega. Cuisine locale exceptionnelle, carte des vins de sherry.",dur:"",price:"€€€",must:true,maps:"https://maps.google.com/?q=La+Carbona+Jerez"},
-  ],
-  bar:[
-    {e:"🍸",name:"Bar Juanito — Jerez",desc:"Le bar à tapas le plus connu de Jerez. Alcachofas et charcuteries.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Bar+Juanito+Jerez"},
-  ],
- }
-},
-{id:12,date:"Jeu 18 juin",j:13,dest:"Séville",type:"hotel",
- p4n:null,addr:null,alert:null,
- city:{
-  voir:[
-    {e:"🏛",name:"Plaza de España",desc:"Grandiose place en demi-cercle avec canal et pont. Lever ou coucher de soleil magique.",dur:"1h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Plaza+de+España+Seville"},
-    {e:"🌳",name:"Parque de María Luisa",desc:"Grand parc autour de la Plaza de España. Idéal à vélo.",dur:"1h",price:"Gratuit",must:false,maps:"https://maps.google.com/?q=Parque+Maria+Luisa+Seville"},
-  ],
-  faire:[
-    {e:"🚲",name:"Vélo dans Séville",desc:"Séville est la ville la plus cyclable d'Espagne. Location Sevici (station vélos en libre service).",dur:"2h",price:"1-2€",must:true,maps:"https://maps.google.com/?q=Sevici+Seville"},
-  ],
-  rando:[
-    {e:"🗺",name:"Quartier Triana à pied",desc:"Pont de Triana → Marché → Ruelles → Bords du Guadalquivir. 3 km facile.",dur:"2h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Triana+Seville"},
-  ],
-  manger:[
-    {e:"🍽",name:"Bar El Comercio",desc:"Tapas traditionnelles dans le marché de Triana. Produits frais du marché.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Mercado+Triana+Seville"},
-    {e:"🍽",name:"Eslava",desc:"L'un des meilleurs bars à tapas de Séville. File d'attente mais incontournable.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Bar+Eslava+Seville"},
-  ],
-  bar:[
-    {e:"🍸",name:"Bar Antojo",desc:"Cocktails créatifs et tapas modernes. Ambiance jeune et décontractée.",dur:"",price:"€€",must:false,maps:"https://maps.google.com/?q=Bar+Antojo+Seville"},
-  ],
- }
-},
-{id:13,date:"Ven 19 juin",j:14,dest:"Séville — centre",type:"hotel",
- p4n:null,addr:null,alert:null,
- city:{
-  voir:[
-    {e:"🏯",name:"Alcázar de Séville",desc:"Palais royal habité en été par la famille royale. Architecture mudéjar éblouissante. Réserver.",dur:"2h",price:"14,50€",must:true,maps:"https://maps.google.com/?q=Alcazar+Seville"},
-    {e:"⛪",name:"Cathédrale & Giralda",desc:"3ème plus grande cathédrale du monde. Monter la Giralda pour la vue panoramique.",dur:"2h",price:"12€",must:true,maps:"https://maps.google.com/?q=Cathedral+Seville"},
-    {e:"🏛",name:"Metropol Parasol (Las Setas)",desc:"Structure en bois géante. Montée sur le toit au coucher du soleil. Vue 360° sur Séville.",dur:"45min",price:"3€",must:true,maps:"https://maps.google.com/?q=Metropol+Parasol+Seville"},
-  ],
-  faire:[],
-  rando:[
-    {e:"🗺",name:"Centre historique — les incontournables",desc:"Cathédrale → Alcázar → Plaza del Triunfo → Barrio Santa Cruz → Las Setas. ~2,5 km.",dur:"3h",price:"Variable",must:true,maps:"https://maps.google.com/?q=Barrio+Santa+Cruz+Seville"},
-  ],
-  manger:[
-    {e:"🍽",name:"Taberna del Alabardero",desc:"Cuisine andalouse raffinée dans un palais du XIXe. Un peu chic pour une occasion spéciale.",dur:"",price:"€€€",must:false,maps:"https://maps.google.com/?q=Taberna+Alabardero+Seville"},
-    {e:"🍽",name:"Casa Morales",desc:"Bodega-restaurant fondée en 1850. Vins en fûts, tapas classiques. Authentique.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Casa+Morales+Seville"},
-  ],
-  bar:[
-    {e:"🍦",name:"Heladería Rayas",desc:"La meilleure glace de Séville selon les sévillans. File d'attente garantie.",dur:"",price:"€",must:true,maps:"https://maps.google.com/?q=Heladeria+Rayas+Seville"},
-    {e:"🍸",name:"El Garlochí",desc:"Bar flamenco kitsch et délirant. Ambiance unique, cocktail 'Sangre de Cristo'.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=El+Garlochi+Seville"},
-  ],
- }
-},
-{id:14,date:"Sam 20 juin",j:15,dest:"Séville — Triana",type:"maison",
- p4n:null,addr:null,alert:null,
- city:{
-  voir:[
-    {e:"🎨",name:"Centre Céramique de Triana",desc:"Musée gratuit sur la céramique andalouse dans une ancienne manufacture. Magnifique.",dur:"1h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Centro+Ceramica+Triana+Seville"},
-    {e:"🌊",name:"Bords du Guadalquivir",desc:"Promenade le long du fleuve au coucher du soleil. Vue sur la Tour d'Or.",dur:"1h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Torre+del+Oro+Seville"},
-  ],
-  faire:[
-    {e:"💃",name:"Spectacle de flamenco",desc:"Casa de la Memoria ou Museo del Baile Flamenco. Le vrai flamenco sévillan. Réserver.",dur:"1h30",price:"20-30€",must:true,maps:"https://maps.google.com/?q=Casa+de+la+Memoria+Seville"},
-  ],
-  rando:[
-    {e:"🗺",name:"Triana & bords du fleuve",desc:"Marché Triana → Pont de Triana → Torre del Oro → Maestranza. 3 km facile.",dur:"2h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Triana+Seville"},
-  ],
-  manger:[
-    {e:"🍽",name:"Bar La Albariza — Triana",desc:"Tapas de poisson et fruits de mer. Uno de los mejores de Triana.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Bar+Albariza+Triana+Seville"},
-  ],
-  bar:[
-    {e:"🍸",name:"Café de los Naranjos",desc:"Terrasse sous les orangers face à la cathédrale. Le spot parfait pour le dernier soir.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Cafe+Naranjos+Seville"},
-    {e:"🍦",name:"Tartessos — Triana",desc:"Glaces et granitas artisanales. La granita de limón est légendaire.",dur:"",price:"€",must:false,maps:"https://maps.google.com/?q=Triana+Seville"},
-  ],
- }
-},
-];
+</div><!-- #main-app -->
 
-const granadaAlertHtml = `
-<div style="font-size:12px;color:var(--amber-d);line-height:1.6;margin-bottom:10px">Uniquement si vous arrivez par l'<strong>A-92 depuis l'est</strong> (Valence, Almeria, Guadix…).</div>
-<div class="asec-title">🚦 Sur l'A-92</div>
-<div class="astep"><div class="snum">1</div><div class="stext">Km 241 — restez sur la <strong>voie de droite</strong>.</div></div>
-<div class="astep"><div class="snum">2</div><div class="stext"><span class="avoid-t">Ignorer</span> Sortie <strong>241B</strong> (Jaén/Madrid) — piste inadaptée.</div></div>
-<div class="astep"><div class="snum">3</div><div class="stext"><span class="ok-t">Prendre</span> Sortie <strong>241A</strong> → GR-30 / Granada.</div></div>
-<div class="asec-title" style="margin-top:10px">🛣 Depuis la GR-30</div>
-<div class="astep"><div class="snum">1</div><div class="stext">Sortie 4 → Albolote / Polígono Industrial.</div></div>
-<div class="astep"><div class="snum">2</div><div class="stext">Rond-point : <strong>3e sortie</strong> → Peligros, traverser le pont.</div></div>
-<div class="astep"><div class="snum">3</div><div class="stext">Après le pont : <strong>gauche</strong> → Avenida Monteluz.</div></div>
-<div class="astep"><div class="snum">4</div><div class="stext">300 m puis <strong>droite</strong> → Avenida de los Olivos.</div></div>
-<div class="astep"><div class="snum">5</div><div class="stext">Tout droit ~900 m, puis <strong>gauche</strong> → 600 m montée jusqu'au camping.</div></div>`;
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut as fbSignOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, onSnapshot, collection, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
-// ─────────────────────────────────────────────
-// STATE
-// ─────────────────────────────────────────────
-let doneDays = new Set(JSON.parse(localStorage.getItem('doneDays')||'[]'));
-let billets = JSON.parse(localStorage.getItem('billets')||'[]');
-let customPois = JSON.parse(localStorage.getItem('customPois')||'{}');
-let tricountUrl = localStorage.getItem('tricountUrl')||'';
-let showDone = false;
-let currentDayId = 0;
-let currentCat = 'voir';
-let billetFiles = {};
+const firebaseConfig = {
+  apiKey: "AIzaSyCAw2dx439O5MjcgFR80gzITJCEC46motI",
+  authDomain: "andalousie-2026.firebaseapp.com",
+  projectId: "andalousie-2026",
+  storageBucket: "andalousie-2026.firebasestorage.app",
+  messagingSenderId: "362759747776",
+  appId: "1:362759747776:web:23d017e0fe94083ce35525"
+};
 
-function save(){
-  localStorage.setItem('doneDays', JSON.stringify([...doneDays]));
-  localStorage.setItem('billets', JSON.stringify(billets));
-  localStorage.setItem('customPois', JSON.stringify(customPois));
+const fbApp = initializeApp(firebaseConfig);
+const auth = getAuth(fbApp);
+const db = getFirestore(fbApp);
+const storage = getStorage(fbApp);
+const provider = new GoogleAuthProvider();
+
+window.signInWithGoogle = async () => {
+  try { await signInWithPopup(auth, provider); }
+  catch(e) { const el=document.getElementById('login-error'); el.textContent='Erreur de connexion. Réessaie.'; el.style.display='block'; }
+};
+window.signOut = async () => { await fbSignOut(auth); location.reload(); };
+
+let currentUser=null, doneDays=new Set(), billets=[], customPois={}, tricountUrl='', showDone=false, currentDayId=0, _billetToDeleteDocId=null;
+
+onAuthStateChanged(auth, user => {
+  if(user){
+    currentUser=user;
+    document.getElementById('loading-screen').style.display='none';
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('main-app').style.display='block';
+    document.getElementById('user-name').textContent=user.displayName?.split(' ')[0]||'';
+    document.getElementById('user-avatar').src=user.photoURL||'';
+    initListeners();
+    initBingo();
+  } else {
+    document.getElementById('loading-screen').style.display='none';
+    document.getElementById('login-screen').style.display='flex';
+    document.getElementById('main-app').style.display='none';
+  }
+});
+
+const tripDoc=()=>doc(db,'trips','andalousie-2026');
+const billetsCol=()=>collection(db,'trips','andalousie-2026','billets');
+const poisCol=()=>collection(db,'trips','andalousie-2026','pois');
+
+function setSyncing(){document.getElementById('sync-dot').className='sync-dot syncing';document.getElementById('sync-label').textContent='Synchro…';}
+function setSynced(){document.getElementById('sync-dot').className='sync-dot';document.getElementById('sync-label').textContent='Synchronisé';}
+function setSyncError(){document.getElementById('sync-dot').className='sync-dot error';document.getElementById('sync-label').textContent='Erreur sync';}
+
+function initListeners(){
+  onSnapshot(tripDoc(), snap=>{
+    if(snap.exists()){const d=snap.data();doneDays=new Set(d.doneDays||[]);tricountUrl=d.tricountUrl||'';}
+    renderHome(); setSynced();
+  }, ()=>setSyncError());
+  onSnapshot(billetsCol(), snap=>{
+    billets=snap.docs.map(d=>({...d.data(),_docId:d.id})).sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
+    renderBillets();
+  }, ()=>setSyncError());
+  onSnapshot(poisCol(), snap=>{
+    customPois={};
+    snap.docs.forEach(d=>{const data=d.data();if(!customPois[data.dayId])customPois[data.dayId]=[];customPois[data.dayId].push({...data,_docId:d.id});});
+    if(document.getElementById('screen-city').classList.contains('active'))renderPois();
+  }, ()=>setSyncError());
 }
 
-// ─────────────────────────────────────────────
+const days=[
+  {id:0,date:"Sam 6 juin",j:1,dest:"Environs de Cordoue",type:"nature",p4n:"https://park4night.com/fr/place/105354",addr:null,alert:null,city:{voir:[{e:"🏛",name:"Medina Azahara",desc:"Ancienne cité palatiale du califat, classée UNESCO. À 8 km.",dur:"2h",price:"Payant",must:true,maps:"https://maps.google.com/?q=Medina+Azahara+Cordoba"},{e:"🏘",name:"Zuheros",desc:"L'un des plus beaux villages blancs d'Andalousie.",dur:"1h30",price:"Gratuit",must:false,maps:"https://maps.google.com/?q=Zuheros+Spain"}],faire:[{e:"🚐",name:"Installation du van",desc:"Récupération à l'aéroport, courses, installation.",dur:"2h",price:"",must:true,maps:null}],rando:[],manger:[{e:"🍽",name:"Mesón Zuheros",desc:"Restaurant typique dans le village blanc.",dur:"",price:"€€",must:false,maps:"https://maps.google.com/?q=Meson+Zuheros"}],bar:[]}},
+  {id:1,date:"Dim 7 juin",j:2,dest:"Cordoue",type:"nature",p4n:"https://park4night.com/fr/search#13/37.888/-4.779",addr:null,alert:null,city:{voir:[{e:"🕌",name:"Mezquita-Catedral",desc:"Chef-d'œuvre de l'architecture islamique. Réserver.",dur:"2h",price:"12€",must:true,maps:"https://maps.google.com/?q=Mezquita+Cordoba"},{e:"🌸",name:"Patios de Cordoue",desc:"Patios fleuris ouverts en juin.",dur:"1h30",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Patios+Cordoba"},{e:"🏰",name:"Alcázar des Rois Chrétiens",desc:"Forteresse médiévale, jardins et fontaines.",dur:"1h30",price:"5€",must:false,maps:"https://maps.google.com/?q=Alcazar+Cordoba"}],faire:[{e:"🚶",name:"Balade Judería",desc:"Flânerie dans les ruelles blanches.",dur:"1h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Juderia+Cordoba"}],rando:[{e:"🗺",name:"Circuit historique",desc:"Mezquita → Judería → Alcázar → Pont Romain. ~3 km.",dur:"2h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Puente+Romano+Cordoba"}],manger:[{e:"🍽",name:"Taberna Salinas",desc:"Institution depuis 1879. Salmorejo, rabo de toro.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Taberna+Salinas+Cordoba"}],bar:[{e:"🍸",name:"Bar Santos",desc:"Terrasse face à la Mezquita. Tortilla réputée.",dur:"",price:"€",must:true,maps:"https://maps.google.com/?q=Bar+Santos+Cordoba"},{e:"🍦",name:"Helados Joyero",desc:"La meilleure glace de Cordoue.",dur:"",price:"€",must:false,maps:"https://maps.google.com/?q=Helados+Joyero+Cordoba"}]}},
+  {id:2,date:"Lun 8 juin",j:3,dest:"Baeza & Úbeda",type:"nature",p4n:"https://park4night.com/fr/search#13/37.994/-3.472",addr:null,alert:null,city:{voir:[{e:"🏛",name:"Plaza del Pópulo — Baeza",desc:"Superbe place Renaissance classée UNESCO.",dur:"1h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Plaza+Populo+Baeza"},{e:"🏛",name:"Plaza Vázquez de Molina — Úbeda",desc:"L'une des plus belles places Renaissance d'Espagne.",dur:"1h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Plaza+Vazquez+Molina+Ubeda"},{e:"⛪",name:"Capilla del Salvador — Úbeda",desc:"Joyau de la Renaissance espagnole.",dur:"45min",price:"6€",must:true,maps:"https://maps.google.com/?q=Capilla+Salvador+Ubeda"}],faire:[],rando:[{e:"🗺",name:"Baeza → Úbeda",desc:"Route panoramique 10 km entre les deux villes. Oliveraies.",dur:"30min",price:"Gratuit",must:false,maps:"https://maps.google.com/?q=Ubeda+Spain"}],manger:[{e:"🍽",name:"Vandelvira — Baeza",desc:"Dans un ancien couvent, spécialités locales.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Restaurante+Vandelvira+Baeza"}],bar:[{e:"☕",name:"Café Mercantil — Úbeda",desc:"Café historique, terrasse sur la place.",dur:"",price:"€",must:false,maps:"https://maps.google.com/?q=Cafe+Mercantil+Ubeda"}]}},
+  {id:3,date:"Mar 9 juin",j:4,dest:"Grenade",type:"camping",p4n:null,addr:{name:"Camping Granada",val:"Avenida de los Olivos s/n, 18013 Granada"},alert:"granada",city:{voir:[{e:"🎸",name:"Sacromonte",desc:"Quartier des grottes troglodytes, berceau du flamenco.",dur:"2h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Sacromonte+Granada"},{e:"🕌",name:"Albaicín",desc:"Quartier maure classé UNESCO.",dur:"2h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Albaicin+Granada"}],faire:[{e:"💃",name:"Spectacle flamenco",desc:"Peña La Platería ou Cueva de la Rocío. Réserver.",dur:"1h30",price:"25-35€",must:true,maps:"https://maps.google.com/?q=Sacromonte+Granada"}],rando:[{e:"🗺",name:"Albaicín → Mirador San Nicolás",desc:"Montée dans les ruelles jusqu'au plus beau point de vue. 1,5 km.",dur:"1h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Mirador+San+Nicolas+Granada"}],manger:[{e:"🍽",name:"Bar Los Diamantes",desc:"Le meilleur bar à tapas. Tapas offertes avec chaque verre.",dur:"",price:"€",must:true,maps:"https://maps.google.com/?q=Bar+Los+Diamantes+Granada"}],bar:[{e:"🫖",name:"Tetería Nazarí",desc:"Salon de thé marocain. Douceurs et thé à la menthe.",dur:"",price:"€",must:true,maps:"https://maps.google.com/?q=Teteria+Nazari+Granada"}]}},
+  {id:4,date:"Mer 10 juin",j:5,dest:"Grenade — Alhambra",type:"camping",p4n:null,addr:{name:"Camping Granada",val:"Avenida de los Olivos s/n, 18013 Granada"},alert:null,city:{voir:[{e:"🏯",name:"Alhambra & Palais Nasrides",desc:"Billets confirmés ! Arriver 15 min avant.",dur:"3-4h",price:"Réservé ✅",must:true,maps:"https://maps.google.com/?q=Alhambra+Granada"},{e:"🌿",name:"Generalife",desc:"Les jardins de l'Alhambra. Inclus dans le billet.",dur:"1h",price:"Inclus",must:true,maps:"https://maps.google.com/?q=Generalife+Granada"}],faire:[{e:"👁",name:"Mirador Silla del Moro",desc:"Vue panoramique sur l'Alhambra. Moins connu, plus beau.",dur:"1h30",price:"Gratuit",must:false,maps:"https://maps.google.com/?q=Silla+del+Moro+Granada"}],rando:[{e:"🗺",name:"Bosque de la Alhambra",desc:"Forêt entourant l'Alhambra. 2 km.",dur:"45min",price:"Gratuit",must:false,maps:"https://maps.google.com/?q=Bosque+Alhambra+Granada"}],manger:[{e:"🍽",name:"Mirador de Morayma",desc:"Vue sur l'Alhambra, cuisine grenadine. Réserver.",dur:"",price:"€€€",must:true,maps:"https://maps.google.com/?q=Mirador+de+Morayma+Granada"}],bar:[{e:"🍸",name:"Taberna La Tana",desc:"Cave à vins exceptionnelle. Tapas et vins naturels.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Taberna+La+Tana+Granada"}]}},
+  {id:5,date:"Jeu 11 juin",j:6,dest:"Grenade — ville",type:"camping",p4n:null,addr:{name:"Camping Granada",val:"Avenida de los Olivos s/n, 18013 Granada"},alert:null,city:{voir:[{e:"⛪",name:"Cathédrale & Chapelle Royale",desc:"Sépulture des Rois Catholiques.",dur:"1h30",price:"5€",must:true,maps:"https://maps.google.com/?q=Catedral+Granada"},{e:"🛍",name:"Alcaicería",desc:"Ancien souk arabe. Tissus, céramiques, épices.",dur:"1h",price:"Gratuit",must:false,maps:"https://maps.google.com/?q=Alcaiceria+Granada"}],faire:[{e:"🛁",name:"Hammam Al Ándalus",desc:"Bains arabes traditionnels. Réserver.",dur:"2h",price:"35-60€",must:false,maps:"https://maps.google.com/?q=Hammam+Al+Andalus+Granada"}],rando:[{e:"🗺",name:"Centre historique",desc:"Cathédrale → Bib-Rambla → Alcaicería. ~2 km.",dur:"1h30",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Plaza+Bib+Rambla+Granada"}],manger:[{e:"🍽",name:"Café Bib-Rambla",desc:"Terrasse sur la plus belle place de Grenade.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Cafe+Bib+Rambla+Granada"}],bar:[{e:"🍦",name:"Los Italianos",desc:"La gelateria de Grenade depuis 1936. File d'attente garantie !",dur:"",price:"€",must:true,maps:"https://maps.google.com/?q=Los+Italianos+Granada"}]}},
+  {id:6,date:"Ven 12 juin",j:7,dest:"Alpujarra",type:"nature",p4n:"https://park4night.com/fr/search#13.5/36.93/-3.35",addr:null,alert:null,city:{voir:[{e:"🏘",name:"Pampaneira",desc:"Premier des trois villages. Ruelles fleuries.",dur:"1h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Pampaneira+Spain"},{e:"🏘",name:"Bubión & Capileira",desc:"Villages perchés à 1300m. Architecture berbère unique.",dur:"1h30",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Bubion+Spain"}],faire:[{e:"🧶",name:"Artisanat local",desc:"Tapis et tissages typiques. Parfait pour un souvenir.",dur:"1h",price:"Variable",must:false,maps:null}],rando:[{e:"🗺",name:"GR7 : Pampaneira → Capileira",desc:"5 km, dénivelé 300m. Vues époustouflantes.",dur:"2h30",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Pampaneira+Spain"}],manger:[{e:"🍽",name:"Mesón Poqueira — Capileira",desc:"Vue sur la vallée, cuisine de montagne.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Meson+Poqueira+Capileira"}],bar:[{e:"☕",name:"Café Bar La Taha — Bubión",desc:"Terrasse panoramique.",dur:"",price:"€",must:false,maps:"https://maps.google.com/?q=Bubion+Spain"}]}},
+  {id:7,date:"Sam 13 juin",j:8,dest:"Alpujarra → Málaga",type:"camping",p4n:null,addr:{name:"Camping La Sierrecilla",val:"Camino de la Mina s/n, 29013 Málaga"},alert:null,city:{voir:[{e:"🏘",name:"Frigiliana",desc:"Le plus beau village blanc de la Costa del Sol.",dur:"1h30",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Frigiliana+Spain"}],faire:[],rando:[{e:"🗺",name:"Frigiliana — village haut",desc:"Ruelles de la partie haute Mudéjar. 30 min.",dur:"45min",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Frigiliana+Spain"}],manger:[{e:"🍽",name:"El Jardín — Frigiliana",desc:"Terrasse avec vue, cuisine méditerranéenne.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=El+Jardin+Frigiliana"}],bar:[{e:"🍦",name:"Heladería Frigiliana",desc:"Glaces artisanales. Pistache et citron au top.",dur:"",price:"€",must:false,maps:"https://maps.google.com/?q=Frigiliana+Spain"}]}},
+  {id:8,date:"Dim 14 juin",j:9,dest:"El Torcal & Caminito",type:"nature",p4n:"https://park4night.com/en/place/323934",addr:null,alert:null,city:{voir:[{e:"🪨",name:"El Torcal de Antequera",desc:"Formations karstiques surréalistes. Paysage unique.",dur:"2h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=El+Torcal+Antequera"},{e:"🏛",name:"Dolmens d'Antequera",desc:"Mégalithes préhistoriques UNESCO. 3500 ans av JC.",dur:"1h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Dolmenes+Antequera"}],faire:[],rando:[{e:"🗺",name:"Sentier Rojo — El Torcal",desc:"4,5 km parmi les rochers karstiques. Facile-moyen.",dur:"2h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=El+Torcal+Antequera"}],manger:[{e:"🍽",name:"Restaurante El Torcal",desc:"À l'entrée du parc, pratique après la rando.",dur:"",price:"€€",must:false,maps:"https://maps.google.com/?q=Restaurante+El+Torcal+Antequera"}],bar:[]}},
+  {id:9,date:"Lun 15 juin",j:10,dest:"Caminito del Rey",type:"camping",p4n:null,addr:{name:"Camping El Sur",val:"Carretera Ronda-Algeciras km 3, 29400 Ronda"},alert:null,city:{voir:[{e:"🥾",name:"Caminito del Rey",desc:"Passerelle vertigineuse accrochée aux falaises. Billet obligatoire !",dur:"4-5h",price:"10€",must:true,maps:"https://maps.google.com/?q=Caminito+del+Rey+Malaga"}],faire:[{e:"🏊",name:"Baignade lac",desc:"En fin de parcours, eaux turquoises.",dur:"1h",price:"Gratuit",must:false,maps:null}],rando:[{e:"🗺",name:"Caminito — circuit complet",desc:"7 km sens unique, navette retour.",dur:"4h",price:"10€",must:true,maps:"https://maps.google.com/?q=Caminito+del+Rey+Malaga"}],manger:[{e:"🍽",name:"Bar El Kiosko — Ardales",desc:"Bocadillos et boissons fraîches.",dur:"",price:"€",must:false,maps:"https://maps.google.com/?q=Ardales+Spain"}],bar:[]}},
+  {id:10,date:"Mar 16 juin",j:11,dest:"Ronda + Villages blancs",type:"nature",p4n:"https://park4night.com/en/place/45297",addr:null,alert:null,city:{voir:[{e:"🌉",name:"Pont Neuf (Puente Nuevo)",desc:"Vertigineux pont du XVIIIe enjambant la gorge.",dur:"30min",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Puente+Nuevo+Ronda"},{e:"🏘",name:"Setenil de las Bodegas",desc:"Village construit sous les rochers. Unique.",dur:"1h30",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Setenil+de+las+Bodegas"},{e:"🏘",name:"Zahara de la Sierra",desc:"Village blanc perché, vue sur lac turquoise.",dur:"1h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Zahara+de+la+Sierra"}],faire:[],rando:[{e:"🗺",name:"Gorge du Tajo",desc:"Descente dans la gorge. 2 km AR.",dur:"1h30",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Tajo+de+Ronda"}],manger:[{e:"🍽",name:"Bodega El Socorro — Setenil",desc:"Dans la roche. Vins et charcuteries locaux.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Setenil+de+las+Bodegas"}],bar:[{e:"☕",name:"Café Faustino — Ronda",desc:"Bar historique sur le Paseo Blas Infante.",dur:"",price:"€",must:false,maps:"https://maps.google.com/?q=Paseo+Blas+Infante+Ronda"}]}},
+  {id:11,date:"Mer 17 juin",j:12,dest:"Jerez + Séville",type:"hotel",p4n:null,addr:null,alert:null,city:{voir:[{e:"🐴",name:"Real Escuela Andaluza",desc:"École équestre royale. Spectacle le matin.",dur:"1h30",price:"20€",must:true,maps:"https://maps.google.com/?q=Real+Escuela+Andaluza+Jerez"},{e:"🍷",name:"Bodegas González Byass",desc:"La plus célèbre bodega de Jerez. Dégustation sherry.",dur:"1h30",price:"18€",must:false,maps:"https://maps.google.com/?q=Gonzalez+Byass+Jerez"}],faire:[],rando:[],manger:[{e:"🍽",name:"La Carbona — Jerez",desc:"Dans une ancienne bodega. Cuisine locale exceptionnelle.",dur:"",price:"€€€",must:true,maps:"https://maps.google.com/?q=La+Carbona+Jerez"}],bar:[{e:"🍸",name:"Bar Juanito — Jerez",desc:"Le bar à tapas le plus connu de Jerez.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Bar+Juanito+Jerez"}]}},
+  {id:12,date:"Jeu 18 juin",j:13,dest:"Séville",type:"hotel",p4n:null,addr:null,alert:null,city:{voir:[{e:"🏛",name:"Plaza de España",desc:"Grandiose place en demi-cercle. Lever de soleil magique.",dur:"1h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Plaza+de+España+Seville"}],faire:[{e:"🚲",name:"Vélo dans Séville",desc:"Sevici en libre service. Séville la plus cyclable d'Espagne.",dur:"2h",price:"1-2€",must:true,maps:"https://maps.google.com/?q=Sevici+Seville"}],rando:[{e:"🗺",name:"Quartier Triana à pied",desc:"Pont → Marché → Ruelles → Guadalquivir. 3 km.",dur:"2h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Triana+Seville"}],manger:[{e:"🍽",name:"Eslava",desc:"L'un des meilleurs bars à tapas de Séville.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Bar+Eslava+Seville"}],bar:[{e:"🍸",name:"Bar Antojo",desc:"Cocktails créatifs, ambiance jeune.",dur:"",price:"€€",must:false,maps:"https://maps.google.com/?q=Bar+Antojo+Seville"}]}},
+  {id:13,date:"Ven 19 juin",j:14,dest:"Séville — centre",type:"hotel",p4n:null,addr:null,alert:null,city:{voir:[{e:"🏯",name:"Alcázar de Séville",desc:"Architecture mudéjar éblouissante. Réserver.",dur:"2h",price:"14,50€",must:true,maps:"https://maps.google.com/?q=Alcazar+Seville"},{e:"⛪",name:"Cathédrale & Giralda",desc:"3ème plus grande cathédrale du monde.",dur:"2h",price:"12€",must:true,maps:"https://maps.google.com/?q=Cathedral+Seville"},{e:"🏛",name:"Metropol Parasol (Las Setas)",desc:"Toit au coucher du soleil. Vue 360°.",dur:"45min",price:"3€",must:true,maps:"https://maps.google.com/?q=Metropol+Parasol+Seville"}],faire:[],rando:[{e:"🗺",name:"Centre historique",desc:"Cathédrale → Alcázar → Barrio Santa Cruz → Las Setas.",dur:"3h",price:"Variable",must:true,maps:"https://maps.google.com/?q=Barrio+Santa+Cruz+Seville"}],manger:[{e:"🍽",name:"Casa Morales",desc:"Bodega-restaurant 1850. Vins en fûts, tapas classiques.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Casa+Morales+Seville"}],bar:[{e:"🍦",name:"Heladería Rayas",desc:"La meilleure glace de Séville.",dur:"",price:"€",must:true,maps:"https://maps.google.com/?q=Heladeria+Rayas+Seville"},{e:"🍸",name:"El Garlochí",desc:"Bar flamenco kitsch et délirant.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=El+Garlochi+Seville"}]}},
+  {id:14,date:"Sam 20 juin",j:15,dest:"Séville — Triana",type:"maison",p4n:null,addr:null,alert:null,city:{voir:[{e:"🎨",name:"Centre Céramique de Triana",desc:"Musée gratuit sur la céramique andalouse.",dur:"1h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Centro+Ceramica+Triana+Seville"},{e:"🌊",name:"Bords du Guadalquivir",desc:"Promenade au coucher du soleil. Tour d'Or.",dur:"1h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Torre+del+Oro+Seville"}],faire:[{e:"💃",name:"Spectacle de flamenco",desc:"Casa de la Memoria. Réserver.",dur:"1h30",price:"20-30€",must:true,maps:"https://maps.google.com/?q=Casa+de+la+Memoria+Seville"}],rando:[{e:"🗺",name:"Triana & bords du fleuve",desc:"Marché → Pont → Torre del Oro. 3 km.",dur:"2h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Triana+Seville"}],manger:[{e:"🍽",name:"Bar La Albariza — Triana",desc:"Tapas de poisson. Un des meilleurs de Triana.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Bar+Albariza+Triana+Seville"}],bar:[{e:"🍸",name:"Café de los Naranjos",desc:"Terrasse sous les orangers face à la cathédrale.",dur:"",price:"€€",must:true,maps:"https://maps.google.com/?q=Cafe+Naranjos+Seville"}]}},
+];
+
+const p4nSpots={
+  0:[{name:"Parking Medina Azahara",desc:"Parking spacieux à l'entrée du site. Calme, idéal pour un van.",url:"https://park4night.com/fr/place/105354"},{name:"Aire naturelle près de Zuheros",desc:"Spot au calme entre oliviers, à 2 km du village.",url:"https://park4night.com/fr/search#13/37.533/-4.098"}],
+  1:[{name:"Recherche spots Cordoue",desc:"Park4night centré sur Cordoue — filtre par type de nuit.",url:"https://park4night.com/fr/search#13/37.888/-4.779"}],
+  2:[{name:"Recherche spots Baeza / Úbeda",desc:"Plusieurs spots signalés entre les oliveraies.",url:"https://park4night.com/fr/search#13/37.994/-3.472"}],
+  6:[{name:"Spot entre Pampaneira et Bubión",desc:"Vue sur la vallée, silence garanti.",url:"https://park4night.com/fr/search#13.5/36.93/-3.35"}],
+  8:[{name:"Parking El Torcal",desc:"Parking du parc. Plusieurs vans y passent la nuit.",url:"https://park4night.com/en/place/323934"}],
+  10:[{name:"Spot près de Zahara de la Sierra",desc:"Vue sur le lac turquoise, nature sauvage.",url:"https://park4night.com/en/place/45297"},{name:"Recherche zone Ronda",desc:"Plusieurs spots autour de Ronda et villages blancs.",url:"https://park4night.com/fr/search#12/36.74/-5.16"}],
+};
+
+const granadaHtml=`<div style="font-size:12px;color:var(--amber-d);line-height:1.6;margin-bottom:10px">Uniquement si vous arrivez par l'<strong>A-92 depuis l'est</strong> (Valence, Almeria, Guadix…).</div><div class="asec-title">🚦 Sur l'A-92</div><div class="astep"><div class="snum">1</div><div class="stext">Km 241 — restez sur la <strong>voie de droite</strong>.</div></div><div class="astep"><div class="snum">2</div><div class="stext"><span class="avoid-t">Ignorer</span> Sortie <strong>241B</strong> (Jaén/Madrid) — piste inadaptée.</div></div><div class="astep"><div class="snum">3</div><div class="stext"><span class="ok-t">Prendre</span> Sortie <strong>241A</strong> → GR-30 / Granada.</div></div><div class="asec-title" style="margin-top:10px">🛣 Depuis la GR-30</div><div class="astep"><div class="snum">1</div><div class="stext">Sortie 4 → Albolote / Polígono Industrial.</div></div><div class="astep"><div class="snum">2</div><div class="stext">Rond-point : <strong>3e sortie</strong> → Peligros, traverser le pont.</div></div><div class="astep"><div class="snum">3</div><div class="stext">Après le pont : <strong>gauche</strong> → Avenida Monteluz.</div></div><div class="astep"><div class="snum">4</div><div class="stext">300 m puis <strong>droite</strong> → Avenida de los Olivos.</div></div><div class="astep"><div class="snum">5</div><div class="stext">Tout droit ~900 m, puis <strong>gauche</strong> → 600 m montée jusqu'au camping.</div></div>`;
+
 // HOME
-// ─────────────────────────────────────────────
 function renderHome(){
-  const upcoming = document.getElementById('upcoming-days');
-  const done = document.getElementById('done-days');
-  const doneCount = document.getElementById('done-count');
-  upcoming.innerHTML=''; done.innerHTML='';
+  const up=document.getElementById('upcoming-days'),dn=document.getElementById('done-days');
+  up.innerHTML='';dn.innerHTML='';
   let doneNum=0;
-  days.forEach(d=>{
-    const isDone = doneDays.has(d.id);
-    if(isDone) doneNum++;
-    const html = buildDayCard(d, isDone);
-    if(isDone) done.innerHTML+=html;
-    else upcoming.innerHTML+=html;
-  });
-  doneCount.textContent = doneNum+' jour'+(doneNum>1?'s':'')+' terminé'+(doneNum>1?'s':'');
-  const pct = Math.round(doneNum/15*100);
+  days.forEach(d=>{const isDone=doneDays.has(d.id);if(isDone)doneNum++;const h=buildDayCard(d,isDone);if(isDone)dn.innerHTML+=h;else up.innerHTML+=h;});
+  document.getElementById('done-count').textContent=doneNum+' jour'+(doneNum>1?'s':'')+' terminé'+(doneNum>1?'s':'');
+  const pct=Math.round(doneNum/15*100);
   document.getElementById('progFill').style.width=pct+'%';
   document.getElementById('progLabel').textContent=doneNum+' / 15 jours';
 }
 
-function buildDayCard(d, isDone){
-  const btns = [];
-  const p4nLink = d.p4n || (d.type==='nature' ? 'https://park4night.com/fr/search' : null);
-  if(p4nLink) btns.push(`<button class="qbtn p4n" onclick="event.stopPropagation();window.open('${p4nLink}','_blank')">🌿 Park4night</button>`);
-  if(d.addr) btns.push(`<button class="qbtn addr" onclick="event.stopPropagation();showAddr('${d.addr.name}','${d.addr.val}')">📍 Adresse</button>`);
-  if(d.alert) btns.push(`<button class="qbtn alert-q" onclick="event.stopPropagation();openCityAlert(${d.id})">⚠️ Accès</button>`);
-  return `<div class="day-card ${isDone?'done-day':''}" onclick="openCity(${d.id})">
-    <div class="day-header-row">
-      <div class="dnum ${isDone?'done':''}">${d.j}</div>
-      <div class="dinfo"><div class="ddate">${d.date}</div><div class="ddest">${d.dest}</div></div>
-      <span class="dbadge ${d.type}">${d.type}</span>
-    </div>
-    ${btns.length?`<div class="day-quick">${btns.join('')}</div>`:''}
-  </div>`;
+function buildDayCard(d,isDone){
+  const btns=[];
+  const p4nLink=d.p4n||(d.type==='nature'?'https://park4night.com/fr/search':null);
+  if(p4nLink)btns.push(`<button class="qbtn p4n" onclick="event.stopPropagation();window.open('${p4nLink}','_blank')">🌿 Park4night</button>`);
+  if(d.addr)btns.push(`<button class="qbtn addr" onclick="event.stopPropagation();showAddr('${d.addr.name}','${d.addr.val}')">📍 Adresse</button>`);
+  if(d.alert)btns.push(`<button class="qbtn alert-q" onclick="event.stopPropagation();openCityAlert(${d.id})">⚠️ Accès</button>`);
+  return `<div class="day-card ${isDone?'done-day':''}" onclick="openCity(${d.id})"><div class="day-header-row"><div class="dnum ${isDone?'done':''}">${d.j}</div><div class="dinfo"><div class="ddate">${d.date}</div><div class="ddest">${d.dest}</div></div><span class="dbadge ${d.type}">${d.type}</span></div>${btns.length?`<div class="day-quick">${btns.join('')}</div>`:''}</div>`;
 }
 
-function toggleShowDone(){
-  showDone=!showDone;
-  document.getElementById('done-days').style.display=showDone?'block':'none';
-  document.querySelector('.show-done-btn').textContent=showDone?'Masquer':'Afficher';
-}
+window.toggleShowDone=()=>{showDone=!showDone;document.getElementById('done-days').style.display=showDone?'block':'none';document.querySelector('.show-done-btn').textContent=showDone?'Masquer':'Afficher';};
 
-// ─────────────────────────────────────────────
-// PARK4NIGHT SPOTS PAR VILLE
-// ─────────────────────────────────────────────
-const p4nSpots = {
-  0: [ // Environs de Cordoue
-    {name:"Parking gratuit Medina Azahara", desc:"Parking spacieux à l'entrée du site. Calme, plat, idéal pour un van. Quelques vans résidents.", url:"https://park4night.com/fr/place/105354"},
-    {name:"Aire naturelle près de Zuheros", desc:"Spot au calme entre oliviers, à 2 km du village blanc. Vue dégagée.", url:"https://park4night.com/fr/search#13/37.533/-4.098"},
-  ],
-  1: [ // Cordoue
-    {name:"Recherche spots Cordoue", desc:"Park4night centré sur Cordoue — filtre par type de nuit (parking, nature, aire CC).", url:"https://park4night.com/fr/search#13/37.888/-4.779"},
-  ],
-  2: [ // Baeza & Úbeda
-    {name:"Recherche spots Baeza / Úbeda", desc:"Zone Baeza-Úbeda. Plusieurs spots signalés entre les oliveraies.", url:"https://park4night.com/fr/search#13/37.994/-3.472"},
-  ],
-  6: [ // Alpujarra
-    {name:"Spot entre Pampaneira et Bubión", desc:"Aire naturelle entre les trois villages. Vue sur la vallée, silence garanti.", url:"https://park4night.com/fr/search#13.5/36.93/-3.35"},
-  ],
-  8: [ // El Torcal
-    {name:"Parking El Torcal (nuit tolérée)", desc:"Parking du parc naturel. Plusieurs vans y passent la nuit. Calme absolu.", url:"https://park4night.com/en/place/323934"},
-  ],
-  10: [ // Ronda + Villages blancs
-    {name:"Spot près de Zahara de la Sierra", desc:"Vue sur le lac turquoise, nature sauvage. L'un des plus beaux spots de la zone.", url:"https://park4night.com/en/place/45297"},
-    {name:"Recherche spots zone Ronda", desc:"Plusieurs spots signalés autour de Ronda et des villages blancs.", url:"https://park4night.com/fr/search#12/36.74/-5.16"},
-  ],
-};
-
-// ─────────────────────────────────────────────
-// CITY PAGE
-// ─────────────────────────────────────────────
-function openCity(id){
+// CITY
+window.openCity=function(id){
   currentDayId=id;
-  currentCat='voir';
   const d=days[id];
   document.getElementById('city-title').textContent=d.dest;
   document.getElementById('city-subtitle').textContent=d.date+' · '+d.type;
-
-  // Park4night block — show for ALL nature nights with spot suggestions
   const p4nBanner=document.getElementById('city-p4n-banner');
   if(d.type==='nature'){
     p4nBanner.style.display='block';
-    const searchLink = d.p4n || 'https://park4night.com/fr/search';
-    const spots = p4nSpots[d.id] || [];
-    const spotsHtml = spots.length
-      ? spots.map(s=>`<div class="p4n-spot">
-          <div class="p4n-spot-name">📍 ${s.name}</div>
-          <div class="p4n-spot-desc">${s.desc}</div>
-          <span class="p4n-spot-link" onclick="window.open('${s.url}','_blank')">Voir sur Park4night →</span>
-        </div>`).join('')
-      : `<div style="font-size:12px;color:var(--teal);opacity:.8;text-align:center;padding:6px 0">Lance une recherche pour trouver un spot près de toi</div>`;
-    p4nBanner.innerHTML=`<div class="p4n-block">
-      <div class="p4n-block-header">
-        <h4>🌿 Nuit en nature</h4>
-        <button class="p4n-search-btn" onclick="window.open('${searchLink}','_blank')">Rechercher un spot</button>
-      </div>
-      ${spotsHtml}
-    </div>`;
+    const sl=d.p4n||'https://park4night.com/fr/search';
+    const spots=p4nSpots[d.id]||[];
+    const sh=spots.length?spots.map(s=>`<div class="p4n-spot"><div class="p4n-spot-name">📍 ${s.name}</div><div class="p4n-spot-desc">${s.desc}</div><span class="p4n-spot-link" onclick="window.open('${s.url}','_blank')">Voir sur Park4night →</span></div>`).join(''):`<div style="font-size:12px;color:var(--teal);text-align:center;padding:6px 0;opacity:.8">Lance une recherche pour trouver un spot</div>`;
+    p4nBanner.innerHTML=`<div class="p4n-block"><div class="p4n-block-header"><h4>🌿 Nuit en nature</h4><button class="p4n-search-btn" onclick="window.open('${sl}','_blank')">Rechercher</button></div>${sh}</div>`;
   } else { p4nBanner.style.display='none'; }
-
-  // Alert
   const alertDiv=document.getElementById('city-alert');
-  if(d.alert==='granada'){
-    alertDiv.style.display='block';
-    alertDiv.innerHTML=`<div class="alert-box" onclick="this.classList.toggle('open')"><div class="alert-hdr"><span>⚠️</span><span class="alert-title">Accès Camping Granada — lire avant d'arriver</span><span class="alert-chev">▾</span></div><div class="alert-body">${granadaAlertHtml}</div></div>`;
-  } else { alertDiv.style.display='none'; }
-
-  // Reset tabs
+  if(d.alert==='granada'){alertDiv.style.display='block';alertDiv.innerHTML=`<div class="alert-box" onclick="this.classList.toggle('open')"><div class="alert-hdr"><span>⚠️</span><span class="alert-title">Accès Camping Granada — lire avant d'arriver</span><span class="alert-chev">▾</span></div><div class="alert-body">${granadaHtml}</div></div>`;}
+  else{alertDiv.style.display='none';}
   document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.cat-tab')[0].classList.add('active');
-  switchCat('voir', null, true);
-
-  // Done button
-  const isDone=doneDays.has(id);
-  document.getElementById('city-done-row').innerHTML=`
-    <button class="mark-done-btn ${isDone?'is-done':''}" onclick="toggleDone(${id})">
-      ${isDone?'↩ Récupérer ce jour':'✓ Marquer ce jour comme fait'}
-    </button>`;
-
-  showScreen('city');
-}
-
-function openCityAlert(id){
-  openCity(id);
-  setTimeout(()=>{ const a=document.querySelector('#city-alert .alert-box'); if(a)a.classList.add('open'); },100);
-}
-
-function switchCat(cat, tabEl, skipRender){
-  currentCat=cat;
   document.querySelectorAll('.poi-list').forEach(l=>l.classList.remove('active'));
-  document.getElementById('poi-'+cat).classList.add('active');
-  if(tabEl){ document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active')); tabEl.classList.add('active'); }
-  if(!skipRender) return;
-  renderPois();
-}
+  document.getElementById('poi-voir').classList.add('active');
+  document.getElementById('city-done-row').innerHTML=`<button class="mark-done-btn ${doneDays.has(id)?'is-done':''}" onclick="toggleDone(${id})">${doneDays.has(id)?'↩ Récupérer ce jour':'✓ Marquer ce jour comme fait'}</button>`;
+  showScreen('city');
+  setTimeout(renderPois,50);
+};
+
+window.openCityAlert=function(id){openCity(id);setTimeout(()=>{const a=document.querySelector('#city-alert .alert-box');if(a)a.classList.add('open');},150);};
+window.switchCat=function(cat,tabEl){document.querySelectorAll('.poi-list').forEach(l=>l.classList.remove('active'));document.getElementById('poi-'+cat).classList.add('active');if(tabEl){document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));tabEl.classList.add('active');}};
 
 function renderPois(){
   const d=days[currentDayId];
-  const cats=['voir','faire','rando','manger','bar'];
-  cats.forEach(cat=>{
-    const container=document.getElementById('poi-'+cat);
-    const basePois=d.city[cat]||[];
+  ['voir','faire','rando','manger','bar'].forEach(cat=>{
+    const c=document.getElementById('poi-'+cat);
+    const base=d.city[cat]||[];
     const custom=(customPois[currentDayId]||[]).filter(p=>p.cat===cat);
-    const all=[...basePois.map(p=>({...p,custom:false})),...custom.map(p=>({...p,custom:true}))];
-    if(!all.length){ container.innerHTML=`<div style="font-size:13px;color:var(--text3);text-align:center;padding:1.5rem 0">Rien ici pour l'instant</div>`; return; }
-    container.innerHTML=all.map((p,i)=>`
-      <div class="poi-card">
-        <div class="poi-top">
-          <div class="poi-emoji">${p.e||'📌'}</div>
-          <div class="poi-info">
-            <div class="poi-name">${p.name}${p.custom?` <span style="font-size:10px;color:var(--text3)">(ajouté)</span>`:''}</div>
-            <div class="poi-desc">${p.desc||''}</div>
-            <div class="poi-meta">
-              ${p.dur?`<span class="poi-tag dur">⏱ ${p.dur}</span>`:''}
-              ${p.price?`<span class="poi-tag price">💶 ${p.price}</span>`:''}
-              ${p.must?`<span class="poi-tag must">⭐ Incontournable</span>`:''}
-            </div>
-          </div>
-        </div>
-        ${p.maps?`<button class="poi-map-btn" onclick="window.open('${p.maps}','_blank')">🗺 Voir sur Maps</button>`:''}
-        ${p.custom?`<button style="font-size:11px;padding:4px 8px;border-radius:6px;border:1px solid var(--border2);background:var(--bg);color:var(--text3);margin-top:6px;" onclick="deleteCustomPoi(${i-basePois.length},event)">🗑 Supprimer</button>`:''}
-      </div>`).join('');
+    const all=[...base.map(p=>({...p,custom:false})),...custom.map(p=>({...p,custom:true}))];
+    if(!all.length){c.innerHTML=`<div style="font-size:13px;color:var(--text3);text-align:center;padding:1.5rem 0">Rien ici pour l'instant</div>`;return;}
+    c.innerHTML=all.map(p=>`<div class="poi-card"><div class="poi-top"><div class="poi-emoji">${p.e||'📌'}</div><div class="poi-info"><div class="poi-name">${p.name}${p.custom?' <span style="font-size:10px;color:var(--text3)">(ajouté)</span>':''}</div><div class="poi-desc">${p.desc||''}</div><div class="poi-meta">${p.dur?`<span class="poi-tag dur">⏱ ${p.dur}</span>`:''} ${p.price?`<span class="poi-tag price">💶 ${p.price}</span>`:''} ${p.must?`<span class="poi-tag must">⭐ Incontournable</span>`:''}</div></div></div>${p.maps?`<button class="poi-map-btn" onclick="window.open('${p.maps}','_blank')">🗺 Voir sur Maps</button>`:''} ${p.custom?`<button style="font-size:11px;padding:4px 8px;border-radius:6px;border:1px solid var(--border2);background:var(--bg);color:var(--text3);margin-top:6px;" onclick="deleteCustomPoi('${p._docId}',event)">🗑 Supprimer</button>`:''}</div>`).join('');
   });
 }
 
-function toggleAddPoi(){
-  document.getElementById('add-poi-form').classList.toggle('open');
-}
-function savePoi(){
-  const name=document.getElementById('poi-name').value.trim();
-  if(!name)return;
-  if(!customPois[currentDayId]) customPois[currentDayId]=[];
-  customPois[currentDayId].push({
-    cat:document.getElementById('poi-cat').value,
-    e:'📌',name,
-    desc:document.getElementById('poi-desc').value,
-    dur:document.getElementById('poi-dur').value,
-    price:'',must:false,
-    maps:document.getElementById('poi-url').value||null,custom:true
-  });
-  save();
-  ['poi-name','poi-desc','poi-dur','poi-url'].forEach(id=>document.getElementById(id).value='');
-  toggleAddPoi();
-  renderPois();
-}
-function deleteCustomPoi(idx,e){
-  e.stopPropagation();
-  if(!customPois[currentDayId])return;
-  customPois[currentDayId].splice(idx,1);
-  save();renderPois();
-}
+window.toggleAddPoi=()=>document.getElementById('add-poi-form').classList.toggle('open');
+window.savePoi=async function(){
+  const name=document.getElementById('poi-name').value.trim();if(!name)return;
+  setSyncing();
+  try{
+    await addDoc(poisCol(),{dayId:currentDayId,cat:document.getElementById('poi-cat').value,e:'📌',name,desc:document.getElementById('poi-desc').value,dur:document.getElementById('poi-dur').value,price:'',must:false,maps:document.getElementById('poi-url').value||null,custom:true,createdAt:Date.now()});
+    ['poi-name','poi-desc','poi-dur','poi-url'].forEach(id=>document.getElementById(id).value='');
+    window.toggleAddPoi();setSynced();
+  }catch(e){setSyncError();}
+};
+window.deleteCustomPoi=async function(docId,e){e.stopPropagation();try{await deleteDoc(doc(db,'trips','andalousie-2026','pois',docId));setSynced();}catch(err){setSyncError();}};
+window.toggleDone=async function(id){
+  setSyncing();
+  try{
+    if(doneDays.has(id))doneDays.delete(id);else doneDays.add(id);
+    await setDoc(tripDoc(),{doneDays:[...doneDays],tricountUrl},{merge:true});
+    document.getElementById('city-done-row').innerHTML=`<button class="mark-done-btn ${doneDays.has(id)?'is-done':''}" onclick="toggleDone(${id})">${doneDays.has(id)?'↩ Récupérer ce jour':'✓ Marquer ce jour comme fait'}</button>`;
+    setSynced();
+  }catch(e){setSyncError();}
+};
+window.goHome=()=>showScreen('home');
 
-function toggleDone(id){
-  if(doneDays.has(id)) doneDays.delete(id);
-  else doneDays.add(id);
-  save();
-  const isDone=doneDays.has(id);
-  document.getElementById('city-done-row').innerHTML=`
-    <button class="mark-done-btn ${isDone?'is-done':''}" onclick="toggleDone(${id})">
-      ${isDone?'↩ Récupérer ce jour':'✓ Marquer ce jour comme fait'}
-    </button>`;
-  renderHome();
-}
-
-function goHome(){ showScreen('home'); }
-
-// ─────────────────────────────────────────────
 // BILLETS
-// ─────────────────────────────────────────────
 const typeEmoji=t=>t==='avion'?'✈️':t==='camping'?'⛺':t==='hotel'?'🏨':t==='activite'?'🎟':'📄';
-
 function renderBillets(){
   const el=document.getElementById('billet-list');
   if(!billets.length){el.innerHTML='<div style="font-size:13px;color:var(--text3);text-align:center;padding:2rem 0">Aucun billet ajouté</div>';return;}
-  el.innerHTML=billets.map((b,i)=>`
-    <div class="billet-card">
-      <div class="bi-top">
-        <span class="bi-emoji">${typeEmoji(b.type)}</span>
-        <span class="bi-name">${b.name}</span>
-        <span class="bi-status ${b.status}">${b.status==='ok'?'✅ Confirmé':'⏳ À réserver'}</span>
-      </div>
-      ${b.date?`<div class="bi-date">📅 ${b.date}</div>`:''}
-      ${b.ref?`<div class="bi-ref">🔖 Réf : ${b.ref}</div>`:''}
-      <div class="bi-actions">
-        ${b.hasFile?`<button class="bi-view-btn" onclick="viewFile(${i})">📎 Voir le document</button>`:''}
-        <button class="bi-del-btn" onclick="askDeleteBillet(${i})">🗑 Supprimer</button>
-      </div>
-    </div>`).join('');
+  el.innerHTML=billets.map(b=>`<div class="billet-card"><div class="bi-top"><span class="bi-emoji">${typeEmoji(b.type)}</span><span class="bi-name">${b.name}</span><span class="bi-status ${b.status}">${b.status==='ok'?'✅ Confirmé':'⏳ À réserver'}</span></div>${b.date?`<div class="bi-date">📅 ${b.date}</div>`:''} ${b.ref?`<div class="bi-ref">🔖 Réf : ${b.ref}</div>`:''}<div class="bi-actions">${b.fileUrl?`<button class="bi-view-btn" onclick="window.open('${b.fileUrl}','_blank')">📎 Voir le document</button>`:''}<button class="bi-del-btn" onclick="askDeleteBillet('${b._docId}',event)">🗑 Supprimer</button></div></div>`).join('');
 }
-
-function toggleBilletForm(){document.getElementById('billet-add-form').classList.toggle('open');}
-
-function addBillet(){
-  const name=document.getElementById('b-name').value.trim();
-  if(!name)return;
+window.toggleBilletForm=()=>document.getElementById('billet-add-form').classList.toggle('open');
+window.addBillet=async function(){
+  const name=document.getElementById('b-name').value.trim();if(!name)return;
+  setSyncing();
   const fileInput=document.getElementById('b-file');
   const file=fileInput.files[0];
-  const idx=billets.length;
-  const entry={type:document.getElementById('b-type').value,name,date:document.getElementById('b-date').value,ref:document.getElementById('b-ref').value,status:document.getElementById('b-status').value,hasFile:!!file};
-  if(file){
-    const reader=new FileReader();
-    reader.onload=e=>{billetFiles[idx]=e.target.result;billets.push(entry);save();renderBillets();};
-    reader.readAsDataURL(file);
-  } else {billets.push(entry);save();renderBillets();}
-  ['b-name','b-date','b-ref'].forEach(id=>document.getElementById(id).value='');
-  fileInput.value='';
-  toggleBilletForm();
-}
+  let fileUrl=null;
+  try{
+    if(file){const fr=ref(storage,`billets/${currentUser.uid}/${Date.now()}_${file.name}`);await uploadBytes(fr,file);fileUrl=await getDownloadURL(fr);}
+    await addDoc(billetsCol(),{type:document.getElementById('b-type').value,name,date:document.getElementById('b-date').value,ref:document.getElementById('b-ref').value,status:document.getElementById('b-status').value,fileUrl,createdAt:Date.now()});
+    ['b-name','b-date','b-ref'].forEach(id=>document.getElementById(id).value='');
+    fileInput.value='';window.toggleBilletForm();setSynced();
+  }catch(e){setSyncError();alert('Erreur lors de l\'ajout.');}
+};
+window.askDeleteBillet=function(docId,e){e.stopPropagation();_billetToDeleteDocId=docId;document.getElementById('delete-modal').classList.add('open');};
+window.closeDeleteModal=()=>{document.getElementById('delete-modal').classList.remove('open');_billetToDeleteDocId=null;};
+window.confirmDeleteBillet=async function(){
+  if(!_billetToDeleteDocId)return;setSyncing();
+  try{await deleteDoc(doc(db,'trips','andalousie-2026','billets',_billetToDeleteDocId));window.closeDeleteModal();setSynced();}
+  catch(e){setSyncError();}
+};
 
-let _billetToDelete = null;
-function askDeleteBillet(i){ _billetToDelete=i; document.getElementById('delete-modal').classList.add('open'); }
-function closeDeleteModal(){ document.getElementById('delete-modal').classList.remove('open'); _billetToDelete=null; }
-function confirmDeleteBillet(){ if(_billetToDelete===null)return; billets.splice(_billetToDelete,1); delete billetFiles[_billetToDelete]; save(); closeDeleteModal(); renderBillets(); }
-function deleteBillet(i){billets.splice(i,1);delete billetFiles[i];save();renderBillets();}
-
-function viewFile(i){
-  const data=billetFiles[i];
-  if(!data){document.getElementById('file-preview-content').innerHTML='<div class="no-preview">Fichier non disponible (rechargement de page)</div>';}
-  else if(data.startsWith('data:image')){document.getElementById('file-preview-content').innerHTML=`<img src="${data}" alt="document">`;}
-  else if(data.startsWith('data:application/pdf')){document.getElementById('file-preview-content').innerHTML=`<iframe src="${data}"></iframe>`;}
-  else{document.getElementById('file-preview-content').innerHTML='<div class="no-preview">Aperçu non disponible</div>';}
-  document.getElementById('file-modal-title').textContent=billets[i].name;
-  document.getElementById('file-modal').classList.add('open');
-}
-function closeFileModal(){document.getElementById('file-modal').classList.remove('open');}
-
-// ─────────────────────────────────────────────
-// BUDGET / TRICOUNT
-// ─────────────────────────────────────────────
-function openTricount(){
+// TRICOUNT
+window.openTricount=async function(){
   if(tricountUrl){window.open(tricountUrl,'_blank');return;}
   const url=prompt('Colle ici le lien de ton Tricount :');
-  if(url&&url.startsWith('http')){tricountUrl=url;localStorage.setItem('tricountUrl',url);window.open(url,'_blank');}
-}
+  if(url&&url.startsWith('http')){tricountUrl=url;await setDoc(tripDoc(),{tricountUrl},{merge:true});window.open(url,'_blank');}
+};
 
-// ─────────────────────────────────────────────
-// ADDRESS MODAL
-// ─────────────────────────────────────────────
+// ADDR
 let _currentAddr='';
-function showAddr(name,val){
-  document.getElementById('addr-modal-name').textContent=name;
-  document.getElementById('addr-modal-val').textContent=val;
-  _currentAddr=val;
-  document.getElementById('addr-modal').classList.add('open');
-}
-function closeAddrModal(){document.getElementById('addr-modal').classList.remove('open');}
-function copyAddr(){
-  if(navigator.clipboard)navigator.clipboard.writeText(_currentAddr);
-  const l=document.getElementById('copy-lbl');l.textContent='✅ Copié !';
-  setTimeout(()=>l.textContent='📋 Copier',2000);
-}
+window.showAddr=function(name,val){document.getElementById('addr-modal-name').textContent=name;document.getElementById('addr-modal-val').textContent=val;_currentAddr=val;document.getElementById('addr-modal').classList.add('open');};
+window.closeAddrModal=()=>document.getElementById('addr-modal').classList.remove('open');
+window.copyAddr=function(){if(navigator.clipboard)navigator.clipboard.writeText(_currentAddr);const l=document.getElementById('copy-lbl');l.textContent='✅ Copié !';setTimeout(()=>l.textContent='📋 Copier',2000);};
+window.closeFileModal=()=>document.getElementById('file-modal').classList.remove('open');
 
-// ─────────────────────────────────────────────
-// NAVIGATION
-// ─────────────────────────────────────────────
-function showScreen(name){
+// BINGO
+const bingoItems=[{e:"🥘",l:"Paella"},{e:"🫒",l:"Olives"},{e:"🌞",l:"+35°C"},{e:"🐂",l:"Taureau"},{e:"💃",l:"Flamenco"},{e:"🍹",l:"Sangria"},{e:"🏚",l:"Village blanc"},{e:"🛵",l:"Scoot fou"},{e:"🌊",l:"Plage"},{e:"⛺",l:"Bon spot"},{e:"🗺",l:"GPS perdu"},{e:"🕌",l:"Mosquée"},{e:"🍦",l:"Glace"},{e:"🌅",l:"Coucher soleil"},{e:"🐈",l:"Chat errant"},{e:"🚿",l:"Douche froide"}];
+let bingoState=[];
+function initBingo(){const s=localStorage.getItem('bingo');bingoState=s?JSON.parse(s):bingoItems.map(i=>({...i,checked:false}));renderBingo();}
+function renderBingo(){
+  document.getElementById('bingo-grid').innerHTML=bingoState.map((item,i)=>`<div class="bingo-cell ${item.checked?'checked':''}" onclick="toggleBingo(${i})"><span class="bc-emoji">${item.e}</span><span class="bc-label">${item.l}</span></div>`).join('');
+  const win=bingoState.filter(b=>b.checked).length>=8;
+  document.getElementById('bingo-win').className='bingo-win'+(win?' show':'');
+}
+window.toggleBingo=function(i){bingoState[i].checked=!bingoState[i].checked;localStorage.setItem('bingo',JSON.stringify(bingoState));renderBingo();};
+window.resetBingo=function(){bingoState=bingoItems.map(i=>({...i,checked:false}));localStorage.removeItem('bingo');renderBingo();};
+
+// DEFIS
+const defis=["Demande un café en espagnol et engage la conversation ! ☕","Prenez un selfie devant le truc le plus kitsch que vous trouvez 📸","Trouvez le glacier le mieux noté dans la ville et allez-y ! 🍦","Commandez quelque chose au menu sans savoir ce que c'est 🍽","Trouvez une vue panoramique et restez-y 15 min sans téléphone 🌅","Parlez uniquement en espagnol pendant 10 minutes 🇪🇸","Achetez un souvenir à moins de 3€ représentant la ville 🎁","Demandez à un local sa recommandation secrète de resto 🤫","Faites une sieste de 20 minutes quelque part de sympa 💤","Trouvez le plus vieux bar de la ville et commandez local 🍻","Prenez en photo 3 portes colorées différentes 🚪","Demandez votre chemin en espagnol 🗺","Mangez quelque chose que vous n'avez jamais goûté 🍴","Trouvez un endroit avec de la musique live ce soir 🎵","Écrivez une carte postale imaginaire à quelqu'un que vous aimez 💌"];
+window.newDefi=()=>document.getElementById('defi-text').textContent=defis[Math.floor(Math.random()*defis.length)];
+
+// DICO
+const dico=[{es:"Hola",fr:"Bonjour / Salut",ph:"o-la"},{es:"Gracias",fr:"Merci",ph:"gra-sias"},{es:"Por favor",fr:"S'il vous plaît",ph:"por fa-vor"},{es:"Perdona",fr:"Excusez-moi",ph:"per-do-na"},{es:"¿Dónde está…?",fr:"Où est… ?",ph:"don-de es-ta"},{es:"¿Cuánto cuesta?",fr:"Combien ça coûte ?",ph:"kwan-to kwes-ta"},{es:"La cuenta",fr:"L'addition",ph:"la kwen-ta"},{es:"¿Hay mesa libre?",fr:"Y a-t-il une table libre ?",ph:"ai me-sa li-bre"},{es:"Sin gluten",fr:"Sans gluten",ph:"sin glu-ten"},{es:"Vegetariano",fr:"Végétarien",ph:"ve-he-ta-ria-no"},{es:"Una cerveza",fr:"Une bière",ph:"u-na ser-ve-sa"},{es:"Vino tinto / blanco",fr:"Vin rouge / blanc",ph:"vi-no tin-to/blan-ko"},{es:"Agua con gas",fr:"Eau gazeuse",ph:"a-gwa kon gas"},{es:"El baño",fr:"Les toilettes",ph:"el ba-nyo"},{es:"Ayuda",fr:"Aide / Au secours",ph:"a-yu-da"},{es:"Mecánico",fr:"Mécanicien",ph:"me-ka-ni-ko"},{es:"Gasolinera",fr:"Station essence",ph:"ga-so-li-ne-ra"},{es:"Camping",fr:"Camping",ph:"kam-ping"},{es:"Aparcamiento",fr:"Parking",ph:"a-par-ka-mien-to"},{es:"Playa",fr:"Plage",ph:"pla-ya"},{es:"Montaña",fr:"Montagne",ph:"mon-ta-nya"},{es:"Sendero",fr:"Sentier de randonnée",ph:"sen-de-ro"},{es:"Farmacia",fr:"Pharmacie",ph:"far-ma-sia"},{es:"Hospital",fr:"Hôpital",ph:"os-pi-tal"},{es:"Policía",fr:"Police",ph:"po-li-sia"},{es:"¡Qué bonito!",fr:"Que c'est beau !",ph:"ke bo-ni-to"},{es:"Delicioso",fr:"Délicieux",ph:"de-li-sio-so"},{es:"Hace calor",fr:"Il fait chaud",ph:"a-se ka-lor"},{es:"Estoy perdida",fr:"Je suis perdue",ph:"es-toy per-di-da"},{es:"¿Hablas francés?",fr:"Tu parles français ?",ph:"a-blas fran-ses"},{es:"No entiendo",fr:"Je ne comprends pas",ph:"no en-tien-do"},{es:"Más despacio",fr:"Plus lentement",ph:"mas des-pa-sio"},{es:"Un poco",fr:"Un peu",ph:"un po-ko"},{es:"Izquierda / Derecha",fr:"Gauche / Droite",ph:"is-kier-da/de-re-cha"},{es:"Todo recto",fr:"Tout droit",ph:"to-do rek-to"},{es:"Abierto / Cerrado",fr:"Ouvert / Fermé",ph:"a-bier-to/se-ra-do"},{es:"Mañana",fr:"Demain / Matin",ph:"ma-nya-na"},{es:"Hoy",fr:"Aujourd'hui",ph:"oi"},{es:"¡Salud!",fr:"Santé !",ph:"sa-lud"},{es:"¡Hasta luego!",fr:"À bientôt !",ph:"as-ta lwe-go"}];
+window.searchDico=function(q){const r=document.getElementById('dico-results');const query=q.toLowerCase().trim();if(!query){r.innerHTML='<div class="dico-empty">Tape un mot pour chercher 🔍</div>';return;}const f=dico.filter(d=>d.es.toLowerCase().includes(query)||d.fr.toLowerCase().includes(query));if(!f.length){r.innerHTML=`<div class="dico-empty">Aucun résultat pour "${q}"</div>`;return;}r.innerHTML=f.map(d=>`<div class="dico-item"><div><div class="dico-es">${d.es}</div><div class="dico-phon">${d.ph}</div></div><div class="dico-fr">${d.fr}</div></div>`).join('');};
+
+// NAV
+window.showScreen=function(name){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  const navEl=document.getElementById('nav-'+name);
-  if(navEl)navEl.classList.add('active');
+  const nav=document.getElementById('nav-'+name);if(nav)nav.classList.add('active');
   window.scrollTo(0,0);
-  if(name==='city'){renderPois();}
-}
+};
 
-// ─────────────────────────────────────────────
-// INIT
-// ─────────────────────────────────────────────
-renderHome();
-renderBillets();
 </script>
 </body>
 </html>
