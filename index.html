@@ -198,14 +198,7 @@ button{font-family:inherit;cursor:pointer;}
 .brow{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border);}
 .brow:last-child{border-bottom:none;font-weight:700;}
 
-/* Où sont-elles button */
-.ou-btn{width:100%;font-size:15px;font-weight:700;padding:13px;border-radius:var(--r);border:none;background:linear-gradient(135deg,#B85A30,#e8773d);color:#fff;margin:0 0 1rem;cursor:pointer;letter-spacing:.3px;box-shadow:0 2px 12px rgba(184,90,48,.25);}
-.ou-bubble{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.1rem;margin-bottom:1rem;display:none;animation:popIn .25s ease;}
-.ou-bubble.show{display:flex;align-items:flex-start;gap:10px;}
-.ou-bubble-emoji{font-size:28px;flex-shrink:0;}
-.ou-bubble-text{font-size:15px;font-weight:500;color:var(--text);line-height:1.5;}
-.ou-bubble-sub{font-size:12px;color:var(--text3);margin-top:4px;}
-@keyframes popIn{from{transform:scale(0.92);opacity:0}to{transform:scale(1);opacity:1}}
+
 .nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--card);border-top:1px solid var(--border);display:flex;padding:8px 0 max(14px,env(safe-area-inset-bottom));z-index:100;}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;color:var(--text3);font-size:10px;font-weight:600;}
 .nav-icon{font-size:22px;line-height:1;}
@@ -228,8 +221,6 @@ button{font-family:inherit;cursor:pointer;}
     <div class="prog-label" id="progLabel">0 / 15 jours</div>
   </div>
   <div class="home-body">
-    <div id="ou-bubble" class="ou-bubble"><span class="ou-bubble-emoji" id="ou-emoji"></span><div><div class="ou-bubble-text" id="ou-text"></div><div class="ou-bubble-sub" id="ou-sub"></div></div></div>
-    <button class="ou-btn" onclick="ouSontElles()">📍 Où sont-elles ?</button>
     <div class="section-title">📅 À venir</div>
     <div id="upcoming-days"></div>
     <div class="done-strip">
@@ -366,6 +357,17 @@ button{font-family:inherit;cursor:pointer;}
     <div class="addr-btns">
       <button class="addr-btn primary" onclick="copyAddr()"><span id="copy-lbl">📋 Copier</span></button>
       <button class="addr-btn" onclick="closeAddrModal()">Fermer</button>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" id="delete-modal" onclick="closeDeleteModal()">
+  <div class="addr-modal" onclick="event.stopPropagation()" style="text-align:center;">
+    <div style="font-size:36px;margin-bottom:10px;">🗑️</div>
+    <h3 style="justify-content:center;margin-bottom:8px;">Supprimer ce billet ?</h3>
+    <p style="font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:18px;">Es-tu sûr de vouloir supprimer ce billet ?<br><strong style="color:var(--orange)">Anaïs ne va pas être contente !!</strong> 😤</p>
+    <div class="addr-btns">
+      <button class="addr-btn" style="background:var(--red-l);color:var(--red);border-color:var(--red);" onclick="confirmDeleteBillet()">Oui, supprimer</button>
+      <button class="addr-btn primary" onclick="closeDeleteModal()">Non, annuler</button>
     </div>
   </div>
 </div>
@@ -949,7 +951,7 @@ function renderBillets(){
       ${b.ref?`<div class="bi-ref">🔖 Réf : ${b.ref}</div>`:''}
       <div class="bi-actions">
         ${b.hasFile?`<button class="bi-view-btn" onclick="viewFile(${i})">📎 Voir le document</button>`:''}
-        <button class="bi-del-btn" onclick="deleteBillet(${i})">🗑 Supprimer</button>
+        <button class="bi-del-btn" onclick="askDeleteBillet(${i})">🗑 Supprimer</button>
       </div>
     </div>`).join('');
 }
@@ -973,6 +975,10 @@ function addBillet(){
   toggleBilletForm();
 }
 
+let _billetToDelete = null;
+function askDeleteBillet(i){ _billetToDelete=i; document.getElementById('delete-modal').classList.add('open'); }
+function closeDeleteModal(){ document.getElementById('delete-modal').classList.remove('open'); _billetToDelete=null; }
+function confirmDeleteBillet(){ if(_billetToDelete===null)return; billets.splice(_billetToDelete,1); delete billetFiles[_billetToDelete]; save(); closeDeleteModal(); renderBillets(); }
 function deleteBillet(i){billets.splice(i,1);delete billetFiles[i];save();renderBillets();}
 
 function viewFile(i){
