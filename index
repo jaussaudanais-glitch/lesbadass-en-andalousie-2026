@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Andalousie">
-<title>☀️ Andalousie 2025</title>
+<title>☀️ Andalousie 2026</title>
 <style>
 :root {
   --orange:#B85A30;--orange-l:#FAECE7;--orange-d:#993C1D;
@@ -110,12 +110,16 @@ button{font-family:inherit;cursor:pointer;}
 .form-btns button{flex:1;font-size:14px;padding:9px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--bg);color:var(--text);font-weight:600;}
 .form-btns button.primary{background:var(--orange);color:#fff;border-color:var(--orange);}
 
-/* Park4night banner */
-.p4n-banner{background:var(--teal-l);border:1px solid var(--teal);border-radius:var(--r);padding:1rem;margin-bottom:1rem;display:flex;align-items:center;gap:12px;}
-.p4n-banner .p4n-text{flex:1;}
-.p4n-banner h4{font-size:14px;font-weight:700;color:var(--teal);}
-.p4n-banner p{font-size:12px;color:var(--teal);margin-top:2px;opacity:.8;}
-.p4n-open-btn{font-size:13px;padding:8px 14px;border-radius:var(--rs);border:none;background:var(--teal);color:#fff;font-weight:700;white-space:nowrap;}
+/* Park4night block */
+.p4n-block{background:var(--teal-l);border:1px solid var(--teal);border-radius:var(--r);padding:1rem;margin-bottom:1rem;}
+.p4n-block-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.p4n-block-header h4{font-size:14px;font-weight:700;color:var(--teal);margin:0;}
+.p4n-search-btn{font-size:12px;padding:5px 12px;border-radius:var(--rs);border:none;background:var(--teal);color:#fff;font-weight:700;white-space:nowrap;}
+.p4n-spot{background:var(--card);border-radius:var(--rs);padding:9px 11px;margin-bottom:7px;border:1px solid rgba(15,110,86,0.15);}
+.p4n-spot:last-child{margin-bottom:0;}
+.p4n-spot-name{font-size:13px;font-weight:700;color:var(--teal);}
+.p4n-spot-desc{font-size:12px;color:var(--text2);margin-top:2px;line-height:1.4;}
+.p4n-spot-link{display:inline-block;font-size:12px;color:var(--teal);font-weight:600;margin-top:6px;text-decoration:underline;cursor:pointer;}
 
 /* Alert box */
 .alert-box{background:var(--amber-l);border:1px solid var(--amber-m);border-radius:var(--r);padding:11px 13px;margin-bottom:1rem;cursor:pointer;}
@@ -194,7 +198,14 @@ button{font-family:inherit;cursor:pointer;}
 .brow{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border);}
 .brow:last-child{border-bottom:none;font-weight:700;}
 
-/* ── NAV ── */
+/* Où sont-elles button */
+.ou-btn{width:100%;font-size:15px;font-weight:700;padding:13px;border-radius:var(--r);border:none;background:linear-gradient(135deg,#B85A30,#e8773d);color:#fff;margin:0 0 1rem;cursor:pointer;letter-spacing:.3px;box-shadow:0 2px 12px rgba(184,90,48,.25);}
+.ou-bubble{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.1rem;margin-bottom:1rem;display:none;animation:popIn .25s ease;}
+.ou-bubble.show{display:flex;align-items:flex-start;gap:10px;}
+.ou-bubble-emoji{font-size:28px;flex-shrink:0;}
+.ou-bubble-text{font-size:15px;font-weight:500;color:var(--text);line-height:1.5;}
+.ou-bubble-sub{font-size:12px;color:var(--text3);margin-top:4px;}
+@keyframes popIn{from{transform:scale(0.92);opacity:0}to{transform:scale(1);opacity:1}}
 .nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--card);border-top:1px solid var(--border);display:flex;padding:8px 0 max(14px,env(safe-area-inset-bottom));z-index:100;}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;color:var(--text3);font-size:10px;font-weight:600;}
 .nav-icon{font-size:22px;line-height:1;}
@@ -217,6 +228,8 @@ button{font-family:inherit;cursor:pointer;}
     <div class="prog-label" id="progLabel">0 / 15 jours</div>
   </div>
   <div class="home-body">
+    <div id="ou-bubble" class="ou-bubble"><span class="ou-bubble-emoji" id="ou-emoji"></span><div><div class="ou-bubble-text" id="ou-text"></div><div class="ou-bubble-sub" id="ou-sub"></div></div></div>
+    <button class="ou-btn" onclick="ouSontElles()">📍 Où sont-elles ?</button>
     <div class="section-title">📅 À venir</div>
     <div id="upcoming-days"></div>
     <div class="done-strip">
@@ -235,12 +248,7 @@ button{font-family:inherit;cursor:pointer;}
     <p id="city-subtitle">Dim 7 juin · Camping</p>
   </div>
   <div class="city-body">
-    <div id="city-p4n-banner" style="display:none">
-      <div class="p4n-banner">
-        <div class="p4n-text"><h4>🌿 Nuit en nature</h4><p>Trouve un spot pour dormir ce soir</p></div>
-        <button class="p4n-open-btn" id="p4n-open-btn">Ouvrir Park4night</button>
-      </div>
-    </div>
+    <div id="city-p4n-banner" style="display:none"></div>
     <div id="city-alert" style="display:none"></div>
     <div class="cat-tabs">
       <div class="cat-tab active" onclick="switchCat('voir',this)">👁 À voir</div>
@@ -393,7 +401,7 @@ const days = [
  }
 },
 {id:1,date:"Dim 7 juin",j:2,dest:"Cordoue",type:"nature",
- p4n:null,addr:{name:"Parking Mezquita",val:"Calle Cairuán, 14003 Córdoba"},alert:null,
+ p4n:"https://park4night.com/fr/search#13/37.888/-4.779",addr:{name:"Parking Mezquita",val:"Calle Cairuán, 14003 Córdoba"},alert:null,
  city:{
   voir:[
     {e:"🕌",name:"Mezquita-Catedral",desc:"Chef-d'œuvre de l'architecture islamique, incontournable. Réserver à l'avance.",dur:"2h",price:"12€",must:true,maps:"https://maps.google.com/?q=Mezquita+Cordoba"},
@@ -417,7 +425,7 @@ const days = [
  }
 },
 {id:2,date:"Lun 8 juin",j:3,dest:"Baeza & Úbeda",type:"nature",
- p4n:null,addr:null,alert:null,
+ p4n:"https://park4night.com/fr/search#13/37.994/-3.472",addr:null,alert:null,
  city:{
   voir:[
     {e:"🏛",name:"Plaza del Pópulo — Baeza",desc:"Superbe place Renaissance avec fontaine et cathédrale. Cœur de la ville.",dur:"1h",price:"Gratuit",must:true,maps:"https://maps.google.com/?q=Plaza+Populo+Baeza"},
@@ -738,7 +746,8 @@ function renderHome(){
 
 function buildDayCard(d, isDone){
   const btns = [];
-  if(d.p4n) btns.push(`<button class="qbtn p4n" onclick="event.stopPropagation();window.open('${d.p4n}','_blank')">🌿 Park4night</button>`);
+  const p4nLink = d.p4n || (d.type==='nature' ? 'https://park4night.com/fr/search' : null);
+  if(p4nLink) btns.push(`<button class="qbtn p4n" onclick="event.stopPropagation();window.open('${p4nLink}','_blank')">🌿 Park4night</button>`);
   if(d.addr) btns.push(`<button class="qbtn addr" onclick="event.stopPropagation();showAddr('${d.addr.name}','${d.addr.val}')">📍 Adresse</button>`);
   if(d.alert) btns.push(`<button class="qbtn alert-q" onclick="event.stopPropagation();openCityAlert(${d.id})">⚠️ Accès</button>`);
   return `<div class="day-card ${isDone?'done-day':''}" onclick="openCity(${d.id})">
@@ -758,6 +767,32 @@ function toggleShowDone(){
 }
 
 // ─────────────────────────────────────────────
+// PARK4NIGHT SPOTS PAR VILLE
+// ─────────────────────────────────────────────
+const p4nSpots = {
+  0: [ // Environs de Cordoue
+    {name:"Parking gratuit Medina Azahara", desc:"Parking spacieux à l'entrée du site. Calme, plat, idéal pour un van. Quelques vans résidents.", url:"https://park4night.com/fr/place/105354"},
+    {name:"Aire naturelle près de Zuheros", desc:"Spot au calme entre oliviers, à 2 km du village blanc. Vue dégagée.", url:"https://park4night.com/fr/search#13/37.533/-4.098"},
+  ],
+  1: [ // Cordoue
+    {name:"Recherche spots Cordoue", desc:"Park4night centré sur Cordoue — filtre par type de nuit (parking, nature, aire CC).", url:"https://park4night.com/fr/search#13/37.888/-4.779"},
+  ],
+  2: [ // Baeza & Úbeda
+    {name:"Recherche spots Baeza / Úbeda", desc:"Zone Baeza-Úbeda. Plusieurs spots signalés entre les oliveraies.", url:"https://park4night.com/fr/search#13/37.994/-3.472"},
+  ],
+  6: [ // Alpujarra
+    {name:"Spot entre Pampaneira et Bubión", desc:"Aire naturelle entre les trois villages. Vue sur la vallée, silence garanti.", url:"https://park4night.com/fr/search#13.5/36.93/-3.35"},
+  ],
+  8: [ // El Torcal
+    {name:"Parking El Torcal (nuit tolérée)", desc:"Parking du parc naturel. Plusieurs vans y passent la nuit. Calme absolu.", url:"https://park4night.com/en/place/323934"},
+  ],
+  10: [ // Ronda + Villages blancs
+    {name:"Spot près de Zahara de la Sierra", desc:"Vue sur le lac turquoise, nature sauvage. L'un des plus beaux spots de la zone.", url:"https://park4night.com/en/place/45297"},
+    {name:"Recherche spots zone Ronda", desc:"Plusieurs spots signalés autour de Ronda et des villages blancs.", url:"https://park4night.com/fr/search#12/36.74/-5.16"},
+  ],
+};
+
+// ─────────────────────────────────────────────
 // CITY PAGE
 // ─────────────────────────────────────────────
 function openCity(id){
@@ -767,11 +802,26 @@ function openCity(id){
   document.getElementById('city-title').textContent=d.dest;
   document.getElementById('city-subtitle').textContent=d.date+' · '+d.type;
 
-  // Park4night banner
+  // Park4night block — show for ALL nature nights with spot suggestions
   const p4nBanner=document.getElementById('city-p4n-banner');
-  if(d.p4n&&d.type==='nature'){
+  if(d.type==='nature'){
     p4nBanner.style.display='block';
-    document.getElementById('p4n-open-btn').onclick=()=>window.open(d.p4n,'_blank');
+    const searchLink = d.p4n || 'https://park4night.com/fr/search';
+    const spots = p4nSpots[d.id] || [];
+    const spotsHtml = spots.length
+      ? spots.map(s=>`<div class="p4n-spot">
+          <div class="p4n-spot-name">📍 ${s.name}</div>
+          <div class="p4n-spot-desc">${s.desc}</div>
+          <span class="p4n-spot-link" onclick="window.open('${s.url}','_blank')">Voir sur Park4night →</span>
+        </div>`).join('')
+      : `<div style="font-size:12px;color:var(--teal);opacity:.8;text-align:center;padding:6px 0">Lance une recherche pour trouver un spot près de toi</div>`;
+    p4nBanner.innerHTML=`<div class="p4n-block">
+      <div class="p4n-block-header">
+        <h4>🌿 Nuit en nature</h4>
+        <button class="p4n-search-btn" onclick="window.open('${searchLink}','_blank')">Rechercher un spot</button>
+      </div>
+      ${spotsHtml}
+    </div>`;
   } else { p4nBanner.style.display='none'; }
 
   // Alert
