@@ -742,25 +742,21 @@ async function saveBingoState(){
 }
 
 function initBingo(){
-  // Load from Firestore via the tripDoc snapshot already running
-  // But also try localStorage as fallback
-  const s=localStorage.getItem('bingo');
-  bingoState=bingoItems.map((item,i)=>{
-    const saved=s?JSON.parse(s)[i]:null;
-    return {...item,checked:saved?.checked||false,photoUrl:saved?.photoUrl||null};
-  });
+  bingoState=bingoItems.map(i=>({...i,checked:false,photoUrl:null}));
   renderBingo();
-  // Load from Firestore
-  onSnapshot(bingoDoc(), snap=>{
-    if(snap.exists()){
-      const cells=snap.data().cells||[];
-      bingoState=bingoItems.map((item,i)=>({
-        ...item,
-        checked:cells[i]?.checked||false,
-        photoUrl:cells[i]?.photoUrl||null,
-      }));
-      renderBingo();
-    }
+  // Load from Firestore once
+  import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js').then(({getDoc,doc:fd})=>{
+    getDoc(fd(db,'trips','andalousie-2026','bingo','state')).then(snap=>{
+      if(snap.exists()){
+        const cells=snap.data().cells||[];
+        bingoState=bingoItems.map((item,i)=>({
+          ...item,
+          checked:cells[i]?.checked||false,
+          photoUrl:cells[i]?.photoUrl||null,
+        }));
+        renderBingo();
+      }
+    }).catch(e=>console.error('bingo load error',e));
   });
 }
 
@@ -825,11 +821,11 @@ window.resetBingoPhoto=function(){
 
 window.confirmBingo=async function(){
   if(_bingoPendingIdx===null)return;
-  // Save locally before closing (closeBingoModal resets these)
   const idx=_bingoPendingIdx;
   const file=_bingoPendingFile;
   closeBingoModal();
   bingoState[idx].checked=true;
+  renderBingo(); // Show checked immediately
   if(file&&currentUser){
     try{
       setSyncing();
@@ -837,13 +833,13 @@ window.confirmBingo=async function(){
       await uploadBytes(storageRef,file);
       const url=await getDownloadURL(storageRef);
       bingoState[idx].photoUrl=url;
+      renderBingo(); // Re-render with photo
       await saveBingoState();
       setSynced();
     }catch(e){setSyncError();console.error('bingo upload error',e);}
   } else {
     await saveBingoState();
   }
-  renderBingo();
 };
 
 window.uncheckedBingo=function(){
