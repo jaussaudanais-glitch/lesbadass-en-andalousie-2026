@@ -414,7 +414,7 @@ button{font-family:inherit;cursor:pointer;}
       <h3>🎯 Bingo du voyage</h3>
       <div class="bingo-win" id="bingo-win">🎉 BINGO ! Vous avez gagné !</div>
       <div class="bingo-grid" id="bingo-grid"></div>
-      <button class="reset-bingo" onclick="resetBingo()">↺ Recommencer</button>
+
     </div>
     <div class="fun-section">
       <h3>⚡ Défi du moment</h3>
@@ -732,11 +732,138 @@ let bingoState=[];
 let _bingoPendingIdx=null;
 let _bingoPendingFile=null;
 
-function initBingo(){
-  const s=localStorage.getItem('bingo');
-  bingoState=s?JSON.parse(s):bingoItems.map(i=>({...i,checked:false,photoUrl:null}));
-  renderBingo();
+const bingoDoc=()=>doc(db,'trips','andalousie-2026','bingo','state');
+
+async function saveBingoState(){
+  try{
+    const data=bingoState.map(b=>({checked:b.checked,photoUrl:b.photoUrl||null}));
+    await setDoc(bingoDoc(),{cells:data},{merge:true});
+  }catch(e){console.error('bingo save error',e);}
 }
+
+function initBingo(){
+  // Load from Firestore via the tripDoc snapshot already running
+  // But also try localStorage as fallback
+  const s=localStorage.getItem('bingo');
+  bingoState=bingoItems.map((item,i)=>{
+    const saved=s?JSON.parse(s)[i]:null;
+    return {...item,checked:saved?.checked||false,photoUrl:saved?.photoUrl||null};
+  });
+  renderBingo();
+  // Load from Firestore
+  onSnapshot(bingoDoc(), snap=>{
+    if(snap.exists()){
+      const cells=snap.data().cells||[];
+      bingoState=bingoItems.map((item,i)=>({
+        ...item,
+        checked:cells[i]?.checked||false,
+        photoUrl:cells[i]?.photoUrl||null,
+      }));
+      renderBingo();
+    }
+  });
+}
+
+function renderBingo(){
+  document.getElementById('bingo-grid').innerHTML=bingoState.map((item,i)=>{
+    if(item.checked&&item.photoUrl){
+      return `<div class="bingo-cell has-photo checked" onclick="openBingoModal(${i})"><img class="bc-photo" src="${item.photoUrl}"><div class="bc-photo-label">${item.e} ${item.l}</div></div>`;
+    }
+    return `<div class="bingo-cell ${item.checked?'checked':''}" onclick="openBingoModal(${i})"><span class="bc-emoji">${item.e}</span><span class="bc-label">${item.l}</span></div>`;
+  }).join('');
+  const win=bingoState.filter(b=>b.checked).length>=8;
+  document.getElementById('bingo-win').className='bingo-win'+(win?' show':'');
+}
+
+window.openBingoModal=function(i){
+  _bingoPendingIdx=i;
+  _bingoPendingFile=null;
+  const item=bingoItems[i];
+  document.getElementById('bingo-modal-emoji').textContent=item.e;
+  document.getElementById('bingo-modal-label').textContent=item.l;
+  document.getElementById('bingo-camera-input').value='';
+  document.getElementById('bingo-gallery-input').value='';
+  const preview=document.getElementById('bingo-photo-preview');
+  if(bingoState[i].checked&&bingoState[i].photoUrl){
+    preview.src=bingoState[i].photoUrl;
+    preview.style.display='block';
+    document.getElementById('bingo-modal-sub').textContent='Ta photo souvenir';
+    document.getElementById('bingo-btns-choose').style.display='none';
+    document.getElementById('bingo-btns-confirm').style.display='none';
+    document.getElementById('bingo-btns-view').style.display='flex';
+  } else {
+    preview.style.display='none';
+    document.getElementById('bingo-modal-sub').textContent='Immortalise ce moment !';
+    document.getElementById('bingo-btns-choose').style.display='flex';
+    document.getElementById('bingo-btns-confirm').style.display='none';
+    document.getElementById('bingo-btns-view').style.display='none';
+  }
+  document.getElementById('bingo-modal').classList.add('open');
+};
+
+window.previewBingoPhoto=function(input){
+  const file=input.files[0];
+  if(!file)return;
+  _bingoPendingFile=file;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const preview=document.getElementById('bingo-photo-preview');
+    preview.src=e.target.result;
+    preview.style.display='block';
+    document.getElementById('bingo-btns-choose').style.display='none';
+    document.getElementById('bingo-btns-confirm').style.display='flex';
+  };
+  reader.readAsDataURL(file);
+};
+
+window.resetBingoPhoto=function(){
+  _bingoPendingFile=null;
+  document.getElementById('bingo-photo-preview').style.display='none';
+  document.getElementById('bingo-btns-choose').style.display='flex';
+  document.getElementById('bingo-btns-confirm').style.display='none';
+};
+
+window.confirmBingo=async function(){
+  if(_bingoPendingIdx===null)return;
+  closeBingoModal();
+  bingoState[_bingoPendingIdx].checked=true;
+  if(_bingoPendingFile&&currentUser){
+    try{
+      setSyncing();
+      const storageRef=ref(storage,`bingo/${currentUser.uid}/${Date.now()}.jpg`);
+      await uploadBytes(storageRef,_bingoPendingFile);
+      const url=await getDownloadURL(storageRef);
+      bingoState[_bingoPendingIdx].photoUrl=url;
+      await saveBingoState();
+      setSynced();
+    }catch(e){setSyncError();console.error('bingo upload error',e);}
+  } else {
+    await saveBingoState();
+  }
+  renderBingo();
+};
+
+window.uncheckedBingo=function(){
+  if(_bingoPendingIdx===null)return;
+  bingoState[_bingoPendingIdx].checked=false;
+  bingoState[_bingoPendingIdx].photoUrl=null;
+  closeBingoModal();
+  saveBingoState();
+  renderBingo();
+};
+
+window.closeBingoModal=function(){
+  document.getElementById('bingo-modal').classList.remove('open');
+  _bingoPendingIdx=null;
+  _bingoPendingFile=null;
+};
+
+window.resetBingo=function(){
+  if(!confirm('Recommencer le bingo ?'))return;
+  bingoState=bingoItems.map(i=>({...i,checked:false,photoUrl:null}));
+  saveBingoState();
+  renderBingo();
+};
 
 function renderBingo(){
   document.getElementById('bingo-grid').innerHTML=bingoState.map((item,i)=>{
