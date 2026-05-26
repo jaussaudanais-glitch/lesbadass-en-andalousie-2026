@@ -211,6 +211,21 @@ button{font-family:inherit;cursor:pointer;}
 .dico-phon{font-size:11px;color:var(--text3);margin-top:2px;}
 .dico-empty{font-size:13px;color:var(--text3);text-align:center;padding:1.5rem;}
 
+/* BINGO PHOTO */
+.bingo-cell{position:relative;overflow:hidden;}
+.bingo-cell.has-photo{padding:0;border-color:var(--orange);}
+.bc-photo{width:100%;height:68px;object-fit:cover;display:block;border-radius:var(--rs);}
+.bc-photo-label{position:absolute;bottom:0;left:0;right:0;background:rgba(184,90,48,0.82);color:#fff;font-size:9px;font-weight:700;padding:2px 3px;text-align:center;line-height:1.3;}
+.bingo-modal-sheet{background:var(--card);border-radius:20px 20px 0 0;padding:1.25rem;width:100%;text-align:center;}
+.bingo-modal-emoji{font-size:38px;margin-bottom:6px;}
+.bingo-modal-label{font-size:17px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.bingo-modal-sub{font-size:13px;color:var(--text2);margin-bottom:14px;}
+.bingo-photo-preview{width:100%;max-height:220px;object-fit:cover;border-radius:var(--rs);margin-bottom:12px;display:none;}
+.bingo-btns{display:flex;flex-direction:column;gap:8px;}
+.bingo-btn{font-size:14px;padding:12px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--bg);color:var(--text);font-weight:600;width:100%;cursor:pointer;}
+.bingo-btn.primary{background:var(--orange);color:#fff;border-color:var(--orange);}
+.bingo-btn.muted{color:var(--text3);}
+
 /* MODALS */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:flex-end;justify-content:center;z-index:300;}
 .modal-overlay.open{display:flex;}
@@ -241,22 +256,6 @@ button{font-family:inherit;cursor:pointer;}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;color:var(--text3);font-size:10px;font-weight:600;}
 .nav-icon{font-size:22px;line-height:1;}
 .nav-item.active{color:var(--orange);}
-
-/* BINGO PHOTO */
-.bingo-cell{position:relative;overflow:hidden;}
-.bingo-cell.has-photo{padding:0;border-color:var(--orange);}
-.bc-photo{width:100%;height:68px;object-fit:cover;display:block;border-radius:var(--rs);}
-.bc-photo-label{position:absolute;bottom:0;left:0;right:0;background:rgba(184,90,48,0.82);color:#fff;font-size:9px;font-weight:700;padding:2px 3px;text-align:center;line-height:1.3;}
-/* Bingo modal */
-.bingo-modal-sheet{background:var(--card);border-radius:20px 20px 0 0;padding:1.25rem;width:100%;text-align:center;}
-.bingo-modal-emoji{font-size:38px;margin-bottom:6px;}
-.bingo-modal-title{font-size:17px;font-weight:700;color:var(--text);margin-bottom:4px;}
-.bingo-modal-sub{font-size:13px;color:var(--text2);margin-bottom:16px;}
-.bingo-photo-preview{width:100%;max-height:200px;object-fit:cover;border-radius:var(--rs);margin-bottom:12px;display:none;}
-.bingo-modal-btns{display:flex;flex-direction:column;gap:8px;}
-.bingo-modal-btn{font-size:14px;padding:11px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--bg);color:var(--text);font-weight:600;width:100%;cursor:pointer;}
-.bingo-modal-btn.primary{background:var(--orange);color:#fff;border-color:var(--orange);}
-.bingo-modal-btn.skip{color:var(--text3);}
 </style>
 </head>
 <body>
@@ -471,23 +470,32 @@ button{font-family:inherit;cursor:pointer;}
   <div class="nav-item" id="nav-fun" onclick="showScreen('fun')"><div class="nav-icon">🎉</div>Fun</div>
 </nav>
 
-
-<!-- BINGO PHOTO MODAL -->
+<!-- BINGO MODAL -->
 <div class="modal-overlay" id="bingo-modal" onclick="closeBingoModal()">
   <div class="bingo-modal-sheet" onclick="event.stopPropagation()">
     <div class="bingo-modal-emoji" id="bingo-modal-emoji"></div>
-    <div class="bingo-modal-title" id="bingo-modal-title"></div>
-    <div class="bingo-modal-sub">Ajoute une photo souvenir !</div>
+    <div class="bingo-modal-label" id="bingo-modal-label"></div>
+    <div class="bingo-modal-sub" id="bingo-modal-sub"></div>
     <img class="bingo-photo-preview" id="bingo-photo-preview" alt="">
-    <input type="file" id="bingo-file-input" accept="image/*" capture="environment" style="display:none" onchange="previewBingoPhoto(this)">
-    <div class="bingo-modal-btns">
-      <button class="bingo-modal-btn primary" onclick="document.getElementById('bingo-file-input').click()">📷 Prendre / Choisir une photo</button>
-      <button class="bingo-modal-btn" id="bingo-confirm-btn" onclick="confirmBingo()" style="display:none">✅ Valider avec cette photo</button>
-      <button class="bingo-modal-btn skip" onclick="confirmBingoNoPhoto()">Cocher sans photo</button>
-      <button class="bingo-modal-btn skip" onclick="closeBingoModal()">Annuler</button>
+    <input type="file" id="bingo-camera-input" accept="image/*" capture="environment" style="display:none" onchange="previewBingoPhoto(this)">
+    <input type="file" id="bingo-gallery-input" accept="image/*" style="display:none" onchange="previewBingoPhoto(this)">
+    <div class="bingo-btns" id="bingo-btns-choose">
+      <button class="bingo-btn primary" onclick="document.getElementById('bingo-camera-input').click()">Prendre une photo</button>
+      <button class="bingo-btn primary" onclick="document.getElementById('bingo-gallery-input').click()">Bibliotheque photos</button>
+      <button class="bingo-btn muted" onclick="closeBingoModal()">Annuler</button>
+    </div>
+    <div class="bingo-btns" id="bingo-btns-confirm" style="display:none">
+      <button class="bingo-btn primary" onclick="confirmBingo()">Utiliser cette photo</button>
+      <button class="bingo-btn muted" onclick="resetBingoPhoto()">Changer de photo</button>
+      <button class="bingo-btn muted" onclick="closeBingoModal()">Annuler</button>
+    </div>
+    <div class="bingo-btns" id="bingo-btns-view" style="display:none">
+      <button class="bingo-btn muted" onclick="uncheckedBingo()">Decocher cette case</button>
+      <button class="bingo-btn muted" onclick="closeBingoModal()">Fermer</button>
     </div>
   </div>
 </div>
+
 </div><!-- #main-app -->
 
 <script type="module">
@@ -732,36 +740,41 @@ function initBingo(){
 
 function renderBingo(){
   document.getElementById('bingo-grid').innerHTML=bingoState.map((item,i)=>{
-    if(item.checked && item.photoUrl){
-      return `<div class="bingo-cell has-photo checked" onclick="toggleBingoCell(${i})">
-        <img class="bc-photo" src="${item.photoUrl}" alt="${item.l}">
-        <div class="bc-photo-label">${item.e} ${item.l}</div>
-      </div>`;
+    if(item.checked&&item.photoUrl){
+      return `<div class="bingo-cell has-photo checked" onclick="openBingoModal(${i})"><img class="bc-photo" src="${item.photoUrl}"><div class="bc-photo-label">${item.e} ${item.l}</div></div>`;
     }
-    return `<div class="bingo-cell ${item.checked?'checked':''}" onclick="toggleBingoCell(${i})">
-      <span class="bc-emoji">${item.e}</span>
-      <span class="bc-label">${item.l}</span>
-    </div>`;
+    return `<div class="bingo-cell ${item.checked?'checked':''}" onclick="openBingoModal(${i})"><span class="bc-emoji">${item.e}</span><span class="bc-label">${item.l}</span></div>`;
   }).join('');
   const win=bingoState.filter(b=>b.checked).length>=8;
   document.getElementById('bingo-win').className='bingo-win'+(win?' show':'');
 }
 
-window.toggleBingoCell=function(i){
-  if(bingoState[i].checked){
-    bingoState[i].checked=false;
-    bingoState[i].photoUrl=null;
-    localStorage.setItem('bingo',JSON.stringify(bingoState));
-    renderBingo();
-    return;
-  }
+window.openBingoModal=function(i){
   _bingoPendingIdx=i;
   _bingoPendingFile=null;
-  document.getElementById('bingo-modal-emoji').textContent=bingoItems[i].e;
-  document.getElementById('bingo-modal-title').textContent=bingoItems[i].l;
-  document.getElementById('bingo-photo-preview').style.display='none';
-  document.getElementById('bingo-confirm-btn').style.display='none';
-  document.getElementById('bingo-file-input').value='';
+  const item=bingoItems[i];
+  document.getElementById('bingo-modal-emoji').textContent=item.e;
+  document.getElementById('bingo-modal-label').textContent=item.l;
+  document.getElementById('bingo-camera-input').value='';
+  document.getElementById('bingo-gallery-input').value='';
+  const preview=document.getElementById('bingo-photo-preview');
+
+  if(bingoState[i].checked&&bingoState[i].photoUrl){
+    // Already checked with photo — show photo + decheck option
+    preview.src=bingoState[i].photoUrl;
+    preview.style.display='block';
+    document.getElementById('bingo-modal-sub').textContent='Ta photo souvenir';
+    document.getElementById('bingo-btns-choose').style.display='none';
+    document.getElementById('bingo-btns-confirm').style.display='none';
+    document.getElementById('bingo-btns-view').style.display='flex';
+  } else {
+    // Not checked — show photo options
+    preview.style.display='none';
+    document.getElementById('bingo-modal-sub').textContent='Immortalise ce moment !';
+    document.getElementById('bingo-btns-choose').style.display='flex';
+    document.getElementById('bingo-btns-confirm').style.display='none';
+    document.getElementById('bingo-btns-view').style.display='none';
+  }
   document.getElementById('bingo-modal').classList.add('open');
 };
 
@@ -771,22 +784,30 @@ window.previewBingoPhoto=function(input){
   _bingoPendingFile=file;
   const reader=new FileReader();
   reader.onload=e=>{
-    const img=document.getElementById('bingo-photo-preview');
-    img.src=e.target.result;
-    img.style.display='block';
-    document.getElementById('bingo-confirm-btn').style.display='block';
+    const preview=document.getElementById('bingo-photo-preview');
+    preview.src=e.target.result;
+    preview.style.display='block';
+    document.getElementById('bingo-btns-choose').style.display='none';
+    document.getElementById('bingo-btns-confirm').style.display='flex';
   };
   reader.readAsDataURL(file);
+};
+
+window.resetBingoPhoto=function(){
+  _bingoPendingFile=null;
+  document.getElementById('bingo-photo-preview').style.display='none';
+  document.getElementById('bingo-btns-choose').style.display='flex';
+  document.getElementById('bingo-btns-confirm').style.display='none';
 };
 
 window.confirmBingo=async function(){
   if(_bingoPendingIdx===null)return;
   closeBingoModal();
   bingoState[_bingoPendingIdx].checked=true;
-  if(_bingoPendingFile && currentUser){
+  if(_bingoPendingFile&&currentUser){
     try{
       setSyncing();
-      const storageRef=ref(storage,`bingo/${currentUser.uid}/${Date.now()}_${_bingoPendingIdx}.jpg`);
+      const storageRef=ref(storage,`bingo/${currentUser.uid}/${Date.now()}.jpg`);
       await uploadBytes(storageRef,_bingoPendingFile);
       const url=await getDownloadURL(storageRef);
       bingoState[_bingoPendingIdx].photoUrl=url;
@@ -797,12 +818,12 @@ window.confirmBingo=async function(){
   renderBingo();
 };
 
-window.confirmBingoNoPhoto=function(){
+window.uncheckedBingo=function(){
   if(_bingoPendingIdx===null)return;
-  bingoState[_bingoPendingIdx].checked=true;
+  bingoState[_bingoPendingIdx].checked=false;
   bingoState[_bingoPendingIdx].photoUrl=null;
-  closeBingoModal();
   localStorage.setItem('bingo',JSON.stringify(bingoState));
+  closeBingoModal();
   renderBingo();
 };
 
@@ -813,7 +834,7 @@ window.closeBingoModal=function(){
 };
 
 window.resetBingo=function(){
-  if(!confirm('Recommencer le bingo ? Les photos seront perdues.'))return;
+  if(!confirm('Recommencer le bingo ?'))return;
   bingoState=bingoItems.map(i=>({...i,checked:false,photoUrl:null}));
   localStorage.removeItem('bingo');
   renderBingo();
