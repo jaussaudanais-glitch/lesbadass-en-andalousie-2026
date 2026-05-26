@@ -825,15 +825,18 @@ window.resetBingoPhoto=function(){
 
 window.confirmBingo=async function(){
   if(_bingoPendingIdx===null)return;
+  // Save locally before closing (closeBingoModal resets these)
+  const idx=_bingoPendingIdx;
+  const file=_bingoPendingFile;
   closeBingoModal();
-  bingoState[_bingoPendingIdx].checked=true;
-  if(_bingoPendingFile&&currentUser){
+  bingoState[idx].checked=true;
+  if(file&&currentUser){
     try{
       setSyncing();
       const storageRef=ref(storage,`bingo/${currentUser.uid}/${Date.now()}.jpg`);
-      await uploadBytes(storageRef,_bingoPendingFile);
+      await uploadBytes(storageRef,file);
       const url=await getDownloadURL(storageRef);
-      bingoState[_bingoPendingIdx].photoUrl=url;
+      bingoState[idx].photoUrl=url;
       await saveBingoState();
       setSynced();
     }catch(e){setSyncError();console.error('bingo upload error',e);}
