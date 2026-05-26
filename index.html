@@ -241,6 +241,22 @@ button{font-family:inherit;cursor:pointer;}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;color:var(--text3);font-size:10px;font-weight:600;}
 .nav-icon{font-size:22px;line-height:1;}
 .nav-item.active{color:var(--orange);}
+
+/* BINGO PHOTO */
+.bingo-cell{position:relative;overflow:hidden;}
+.bingo-cell.has-photo{padding:0;border-color:var(--orange);}
+.bc-photo{width:100%;height:68px;object-fit:cover;display:block;border-radius:var(--rs);}
+.bc-photo-label{position:absolute;bottom:0;left:0;right:0;background:rgba(184,90,48,0.82);color:#fff;font-size:9px;font-weight:700;padding:2px 3px;text-align:center;line-height:1.3;}
+/* Bingo modal */
+.bingo-modal-sheet{background:var(--card);border-radius:20px 20px 0 0;padding:1.25rem;width:100%;text-align:center;}
+.bingo-modal-emoji{font-size:38px;margin-bottom:6px;}
+.bingo-modal-title{font-size:17px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.bingo-modal-sub{font-size:13px;color:var(--text2);margin-bottom:16px;}
+.bingo-photo-preview{width:100%;max-height:200px;object-fit:cover;border-radius:var(--rs);margin-bottom:12px;display:none;}
+.bingo-modal-btns{display:flex;flex-direction:column;gap:8px;}
+.bingo-modal-btn{font-size:14px;padding:11px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--bg);color:var(--text);font-weight:600;width:100%;cursor:pointer;}
+.bingo-modal-btn.primary{background:var(--orange);color:#fff;border-color:var(--orange);}
+.bingo-modal-btn.skip{color:var(--text3);}
 </style>
 </head>
 <body>
@@ -455,6 +471,23 @@ button{font-family:inherit;cursor:pointer;}
   <div class="nav-item" id="nav-fun" onclick="showScreen('fun')"><div class="nav-icon">🎉</div>Fun</div>
 </nav>
 
+
+<!-- BINGO PHOTO MODAL -->
+<div class="modal-overlay" id="bingo-modal" onclick="closeBingoModal()">
+  <div class="bingo-modal-sheet" onclick="event.stopPropagation()">
+    <div class="bingo-modal-emoji" id="bingo-modal-emoji"></div>
+    <div class="bingo-modal-title" id="bingo-modal-title"></div>
+    <div class="bingo-modal-sub">Ajoute une photo souvenir !</div>
+    <img class="bingo-photo-preview" id="bingo-photo-preview" alt="">
+    <input type="file" id="bingo-file-input" accept="image/*" capture="environment" style="display:none" onchange="previewBingoPhoto(this)">
+    <div class="bingo-modal-btns">
+      <button class="bingo-modal-btn primary" onclick="document.getElementById('bingo-file-input').click()">📷 Prendre / Choisir une photo</button>
+      <button class="bingo-modal-btn" id="bingo-confirm-btn" onclick="confirmBingo()" style="display:none">✅ Valider avec cette photo</button>
+      <button class="bingo-modal-btn skip" onclick="confirmBingoNoPhoto()">Cocher sans photo</button>
+      <button class="bingo-modal-btn skip" onclick="closeBingoModal()">Annuler</button>
+    </div>
+  </div>
+</div>
 </div><!-- #main-app -->
 
 <script type="module">
@@ -688,14 +721,103 @@ window.closeFileModal=()=>document.getElementById('file-modal').classList.remove
 // BINGO
 const bingoItems=[{e:"🥘",l:"Paella"},{e:"🫒",l:"Olives"},{e:"🌞",l:"+35°C"},{e:"🐂",l:"Taureau"},{e:"💃",l:"Flamenco"},{e:"🍹",l:"Sangria"},{e:"🏚",l:"Village blanc"},{e:"🛵",l:"Scoot fou"},{e:"🌊",l:"Plage"},{e:"⛺",l:"Bon spot"},{e:"🗺",l:"GPS perdu"},{e:"🕌",l:"Mosquée"},{e:"🍦",l:"Glace"},{e:"🌅",l:"Coucher soleil"},{e:"🐈",l:"Chat errant"},{e:"🚿",l:"Douche froide"}];
 let bingoState=[];
-function initBingo(){const s=localStorage.getItem('bingo');bingoState=s?JSON.parse(s):bingoItems.map(i=>({...i,checked:false}));renderBingo();}
+let _bingoPendingIdx=null;
+let _bingoPendingFile=null;
+
+function initBingo(){
+  const s=localStorage.getItem('bingo');
+  bingoState=s?JSON.parse(s):bingoItems.map(i=>({...i,checked:false,photoUrl:null}));
+  renderBingo();
+}
+
 function renderBingo(){
-  document.getElementById('bingo-grid').innerHTML=bingoState.map((item,i)=>`<div class="bingo-cell ${item.checked?'checked':''}" onclick="toggleBingo(${i})"><span class="bc-emoji">${item.e}</span><span class="bc-label">${item.l}</span></div>`).join('');
+  document.getElementById('bingo-grid').innerHTML=bingoState.map((item,i)=>{
+    if(item.checked && item.photoUrl){
+      return `<div class="bingo-cell has-photo checked" onclick="toggleBingoCell(${i})">
+        <img class="bc-photo" src="${item.photoUrl}" alt="${item.l}">
+        <div class="bc-photo-label">${item.e} ${item.l}</div>
+      </div>`;
+    }
+    return `<div class="bingo-cell ${item.checked?'checked':''}" onclick="toggleBingoCell(${i})">
+      <span class="bc-emoji">${item.e}</span>
+      <span class="bc-label">${item.l}</span>
+    </div>`;
+  }).join('');
   const win=bingoState.filter(b=>b.checked).length>=8;
   document.getElementById('bingo-win').className='bingo-win'+(win?' show':'');
 }
-window.toggleBingo=function(i){bingoState[i].checked=!bingoState[i].checked;localStorage.setItem('bingo',JSON.stringify(bingoState));renderBingo();};
-window.resetBingo=function(){bingoState=bingoItems.map(i=>({...i,checked:false}));localStorage.removeItem('bingo');renderBingo();};
+
+window.toggleBingoCell=function(i){
+  if(bingoState[i].checked){
+    bingoState[i].checked=false;
+    bingoState[i].photoUrl=null;
+    localStorage.setItem('bingo',JSON.stringify(bingoState));
+    renderBingo();
+    return;
+  }
+  _bingoPendingIdx=i;
+  _bingoPendingFile=null;
+  document.getElementById('bingo-modal-emoji').textContent=bingoItems[i].e;
+  document.getElementById('bingo-modal-title').textContent=bingoItems[i].l;
+  document.getElementById('bingo-photo-preview').style.display='none';
+  document.getElementById('bingo-confirm-btn').style.display='none';
+  document.getElementById('bingo-file-input').value='';
+  document.getElementById('bingo-modal').classList.add('open');
+};
+
+window.previewBingoPhoto=function(input){
+  const file=input.files[0];
+  if(!file)return;
+  _bingoPendingFile=file;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=document.getElementById('bingo-photo-preview');
+    img.src=e.target.result;
+    img.style.display='block';
+    document.getElementById('bingo-confirm-btn').style.display='block';
+  };
+  reader.readAsDataURL(file);
+};
+
+window.confirmBingo=async function(){
+  if(_bingoPendingIdx===null)return;
+  closeBingoModal();
+  bingoState[_bingoPendingIdx].checked=true;
+  if(_bingoPendingFile && currentUser){
+    try{
+      setSyncing();
+      const storageRef=ref(storage,`bingo/${currentUser.uid}/${Date.now()}_${_bingoPendingIdx}.jpg`);
+      await uploadBytes(storageRef,_bingoPendingFile);
+      const url=await getDownloadURL(storageRef);
+      bingoState[_bingoPendingIdx].photoUrl=url;
+      setSynced();
+    }catch(e){setSyncError();}
+  }
+  localStorage.setItem('bingo',JSON.stringify(bingoState));
+  renderBingo();
+};
+
+window.confirmBingoNoPhoto=function(){
+  if(_bingoPendingIdx===null)return;
+  bingoState[_bingoPendingIdx].checked=true;
+  bingoState[_bingoPendingIdx].photoUrl=null;
+  closeBingoModal();
+  localStorage.setItem('bingo',JSON.stringify(bingoState));
+  renderBingo();
+};
+
+window.closeBingoModal=function(){
+  document.getElementById('bingo-modal').classList.remove('open');
+  _bingoPendingIdx=null;
+  _bingoPendingFile=null;
+};
+
+window.resetBingo=function(){
+  if(!confirm('Recommencer le bingo ? Les photos seront perdues.'))return;
+  bingoState=bingoItems.map(i=>({...i,checked:false,photoUrl:null}));
+  localStorage.removeItem('bingo');
+  renderBingo();
+};
 
 // DEFIS
 const defis=["Demande un café en espagnol et engage la conversation ! ☕","Prenez un selfie devant le truc le plus kitsch que vous trouvez 📸","Trouvez le glacier le mieux noté dans la ville et allez-y ! 🍦","Commandez quelque chose au menu sans savoir ce que c'est 🍽","Trouvez une vue panoramique et restez-y 15 min sans téléphone 🌅","Parlez uniquement en espagnol pendant 10 minutes 🇪🇸","Achetez un souvenir à moins de 3€ représentant la ville 🎁","Demandez à un local sa recommandation secrète de resto 🤫","Faites une sieste de 20 minutes quelque part de sympa 💤","Trouvez le plus vieux bar de la ville et commandez local 🍻","Prenez en photo 3 portes colorées différentes 🚪","Demandez votre chemin en espagnol 🗺","Mangez quelque chose que vous n'avez jamais goûté 🍴","Trouvez un endroit avec de la musique live ce soir 🎵","Écrivez une carte postale imaginaire à quelqu'un que vous aimez 💌"];
