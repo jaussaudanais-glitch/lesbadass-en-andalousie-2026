@@ -276,40 +276,6 @@ button{font-family:inherit;cursor:pointer;}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;color:var(--text3);font-size:10px;font-weight:600;}
 .nav-icon{font-size:22px;line-height:1;}
 .nav-item.active{color:var(--orange);}
-
-/* SURPRISES */
-.surprise-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;overflow:hidden;}
-.surprise-unlocked{padding:1rem;cursor:pointer;}
-.surprise-header{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
-.surprise-emoji{font-size:28px;}
-.surprise-title{font-size:15px;font-weight:700;color:var(--text);}
-.surprise-badge{font-size:11px;padding:2px 8px;border-radius:20px;background:var(--green-l);color:var(--green);font-weight:600;display:inline-block;margin-top:2px;}
-.admin-panel{background:var(--purple-l);border:1px solid #AFA9EC;border-radius:var(--r);padding:1rem;margin-bottom:10px;}
-.admin-panel h4{font-size:13px;font-weight:700;color:var(--purple);margin-bottom:10px;}
-.admin-item{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(175,169,236,0.3);}
-.admin-item:last-child{border-bottom:none;}
-.admin-item-label{font-size:13px;color:var(--purple);display:flex;align-items:center;gap:6px;}
-.surprise-toggle-btn{font-size:12px;padding:5px 12px;border-radius:20px;border:none;font-weight:700;cursor:pointer;}
-.surprise-toggle-btn.activate{background:var(--green);color:#fff;}
-.surprise-toggle-btn.deactivate{background:var(--red-l);color:var(--red);}
-
-/* COULEURS */
-.couleur-back{display:flex;align-items:center;gap:6px;color:rgba(255,255,255,0.85);font-size:14px;font-weight:600;background:none;border:none;padding:0;margin-bottom:10px;cursor:pointer;}
-.palette{display:flex;flex-wrap:wrap;gap:10px;margin:1rem 0;}
-.palette-swatch{width:46px;height:46px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .15s;flex-shrink:0;}
-.palette-swatch.selected{transform:scale(1.15);box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--text);}
-.couleur-my-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
-.couleur-swatch-big{width:36px;height:36px;border-radius:50%;flex-shrink:0;border:2px solid var(--border2);}
-.couleur-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;border-radius:var(--rs);overflow:hidden;margin-bottom:12px;}
-.couleur-grid img{width:100%;aspect-ratio:1;object-fit:cover;cursor:pointer;}
-.couleur-add-btn{width:100%;font-size:14px;padding:11px;border-radius:var(--rs);border:1px dashed var(--border2);background:var(--bg);color:var(--text2);font-weight:600;margin-bottom:8px;cursor:pointer;}
-.reveal-btn{width:100%;font-size:14px;padding:12px;border-radius:var(--rs);border:none;background:var(--purple);color:#fff;font-weight:700;margin-top:8px;cursor:pointer;}
-.reveal-section{margin-bottom:1.5rem;}
-.reveal-title{font-size:14px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
-.reveal-dot{width:18px;height:18px;border-radius:50%;flex-shrink:0;}
-.reveal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;border-radius:var(--rs);overflow:hidden;}
-.reveal-grid img{width:100%;aspect-ratio:1;object-fit:cover;}
-
 </style>
 </head>
 <body>
@@ -559,54 +525,6 @@ button{font-family:inherit;cursor:pointer;}
   </div>
 </div>
 
-
-<!-- DÉFI COULEURS -->
-<div class="screen" id="screen-couleurs">
-  <div class="home-header" style="border-radius:0 0 24px 24px;">
-    <button class="couleur-back" onclick="showScreen('fun')">← Retour</button>
-    <h1 style="font-size:20px;font-weight:700;color:#fff;">🎨 Défi Couleurs</h1>
-    <p style="font-size:13px;color:rgba(255,255,255,0.8);margin-top:2px;">Une couleur, des souvenirs uniques</p>
-  </div>
-  <div class="page-body">
-    <div id="couleur-step-choose" style="display:none">
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:12px;">
-        <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">Comment ça marche ?</div>
-        <div style="font-size:13px;color:var(--text2);line-height:1.6;">Choisis une couleur pour tout le séjour. Photographie des scènes où cette couleur domine. À la fin on révèle nos galeries ensemble !</div>
-      </div>
-      <div style="font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Ma couleur</div>
-      <div class="palette" id="couleur-palette"></div>
-      <button id="couleur-confirm-btn" onclick="confirmCouleur()" style="display:none;width:100%;font-size:14px;padding:12px;border-radius:var(--rs);border:none;background:var(--orange);color:#fff;font-weight:700;cursor:pointer;">Choisir cette couleur ✓</button>
-    </div>
-    <div id="couleur-step-gallery" style="display:none">
-      <div class="couleur-my-header">
-        <div class="couleur-swatch-big" id="couleur-my-swatch"></div>
-        <div style="flex:1">
-          <div style="font-size:15px;font-weight:700;color:var(--text)" id="couleur-my-name"></div>
-          <div style="font-size:12px;color:var(--text3)" id="couleur-my-count"></div>
-        </div>
-        <button onclick="toggleCouleurAddBtns()" style="font-size:13px;padding:8px 14px;border-radius:var(--rs);border:none;background:var(--orange);color:#fff;font-weight:700;cursor:pointer;">📷 Ajouter</button>
-      </div>
-      <input type="file" id="couleur-camera" accept="image/*" capture="environment" style="display:none" onchange="uploadCouleurPhoto(this)">
-      <input type="file" id="couleur-gallery-input" accept="image/*" style="display:none" onchange="uploadCouleurPhoto(this)">
-      <div id="couleur-add-btns" style="display:none;flex-direction:column;gap:8px;margin-bottom:12px;">
-        <button class="couleur-add-btn" onclick="document.getElementById('couleur-camera').click()">📷 Prendre une photo</button>
-        <button class="couleur-add-btn" onclick="document.getElementById('couleur-gallery-input').click()">🖼 Bibliothèque photos</button>
-        <button class="couleur-add-btn" onclick="toggleCouleurAddBtns()" style="color:var(--text3);">Annuler</button>
-      </div>
-      <div class="couleur-grid" id="couleur-my-grid"></div>
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1rem;text-align:center;margin-top:8px;">
-        <div style="font-size:24px;margin-bottom:6px;">🎁</div>
-        <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;">Révélation finale</div>
-        <div style="font-size:12px;color:var(--text2);margin-bottom:12px;">À ouvrir ensemble à la fin du voyage !</div>
-        <button class="reveal-btn" onclick="showReveal()">✨ Révéler nos galeries</button>
-      </div>
-    </div>
-    <div id="couleur-step-reveal" style="display:none">
-      <div id="reveal-content"></div>
-      <button class="couleur-add-btn" onclick="document.getElementById('couleur-step-reveal').style.display='none';document.getElementById('couleur-step-gallery').style.display='block'" style="margin-top:8px;">← Retour à ma galerie</button>
-    </div>
-  </div>
-</div>
 </div><!-- #main-app -->
 
 <script type="module">
@@ -1127,8 +1045,6 @@ window.showScreen=function(name){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   const nav=document.getElementById('nav-'+name);if(nav)nav.classList.add('active');
   window.scrollTo(0,0);
-  if(name==='city')renderPois();
-  if(name==='couleurs')initCouleurs();
 };
 
 // SURPRISES
@@ -1221,150 +1137,6 @@ window.toggleSurprise=async function(id,activate){
     await setDoc(surprisesDoc(),surprisesState);
     setSynced();
   }catch(e){setSyncError();}
-};
-
-// SURPRISES
-const ADMIN_EMAIL='jaussaud.anais@gmail.com';
-const isAdmin=()=>currentUser&&currentUser.email===ADMIN_EMAIL;
-const SURPRISES=[
-  {id:'couleurs',emoji:'🎨',title:'Défi Couleurs',screen:'couleurs'},
-];
-let surprisesState={};
-const surprisesDoc=()=>doc(db,'trips','andalousie-2026','surprises','state');
-
-function initSurprises(){
-  onSnapshot(surprisesDoc(),snap=>{
-    surprisesState=snap.exists()?snap.data():{};
-    renderSurprises();
-  });
-}
-
-function renderSurprises(){
-  const section=document.getElementById('surprises-section');
-  const list=document.getElementById('surprises-list');
-  if(!section||!list)return;
-  const anyActive=SURPRISES.some(s=>surprisesState[s.id]);
-  if(!isAdmin()&&!anyActive){section.style.display='none';return;}
-  section.style.display='block';
-  if(isAdmin()){
-    const adminHtml=`<div class="admin-panel"><h4>👑 Panneau admin</h4>${SURPRISES.map(s=>{const on=!!surprisesState[s.id];return `<div class="admin-item"><span class="admin-item-label">${s.emoji} ${s.title}</span><button class="surprise-toggle-btn ${on?'deactivate':'activate'}" onclick="toggleSurprise('${s.id}',${!on})">${on?'🔒 Désactiver':'🔓 Activer'}</button></div>`;}).join('')}</div>`;
-    const activeHtml=SURPRISES.filter(s=>surprisesState[s.id]).map(s=>`<div class="surprise-card"><div class="surprise-unlocked" onclick="showScreen('${s.screen}')"><div class="surprise-header"><span class="surprise-emoji">${s.emoji}</span><div><div class="surprise-title">${s.title}</div><span class="surprise-badge">✨ Active — Appuie pour ouvrir</span></div></div></div></div>`).join('');
-    list.innerHTML=adminHtml+(activeHtml||`<div style="font-size:13px;color:var(--text3);text-align:center;padding:1rem 0">Aucune surprise active</div>`);
-  } else {
-    list.innerHTML=SURPRISES.filter(s=>surprisesState[s.id]).map(s=>`<div class="surprise-card"><div class="surprise-unlocked" onclick="showScreen('${s.screen}')"><div class="surprise-header"><span class="surprise-emoji">${s.emoji}</span><div><div class="surprise-title">${s.title}</div><span class="surprise-badge">✨ Appuie pour ouvrir !</span></div></div></div></div>`).join('');
-  }
-}
-
-window.toggleSurprise=async function(id,activate){
-  surprisesState[id]=activate;
-  try{setSyncing();await setDoc(surprisesDoc(),surprisesState);setSynced();}
-  catch(e){setSyncError();}
-};
-
-// DÉFI COULEURS
-const COULEURS=[
-  {name:'Rouge',hex:'#E63946'},{name:'Orange',hex:'#F4833D'},
-  {name:'Jaune',hex:'#F9C74F'},{name:'Vert',hex:'#52B788'},
-  {name:'Bleu',hex:'#457B9D'},{name:'Violet',hex:'#7B2D8B'},
-  {name:'Rose',hex:'#FF6B9D'},{name:'Turquoise',hex:'#06D6A0'},
-  {name:'Blanc',hex:'#F1F1EE'},{name:'Noir',hex:'#2B2D42'},
-];
-let myCouleur=null;
-let myCouleurPhotos=[];
-let _selectedCouleurIdx=null;
-const couleurDoc=()=>doc(db,'trips','andalousie-2026','couleurs',currentUser.uid);
-
-async function initCouleurs(){
-  myCouleur=null; myCouleurPhotos=[];
-  try{
-    const {getDoc}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    const snap=await getDoc(couleurDoc());
-    if(snap.exists()){const d=snap.data();myCouleur={name:d.name,hex:d.hex};myCouleurPhotos=d.photos||[];}
-  }catch(e){console.error('couleur load',e);}
-  renderCouleurScreen();
-}
-
-function renderCouleurScreen(){
-  const choose=document.getElementById('couleur-step-choose');
-  const gallery=document.getElementById('couleur-step-gallery');
-  if(!myCouleur){
-    choose.style.display='block'; gallery.style.display='none';
-    document.getElementById('couleur-palette').innerHTML=COULEURS.map((c,i)=>`<div class="palette-swatch ${_selectedCouleurIdx===i?'selected':''}" style="background:${c.hex}" onclick="selectCouleur(${i})" title="${c.name}"></div>`).join('');
-    document.getElementById('couleur-confirm-btn').style.display=_selectedCouleurIdx!==null?'block':'none';
-  } else {
-    choose.style.display='none'; gallery.style.display='block';
-    document.getElementById('couleur-my-swatch').style.background=myCouleur.hex;
-    document.getElementById('couleur-my-name').textContent='Ma couleur : '+myCouleur.name;
-    const n=myCouleurPhotos.length;
-    document.getElementById('couleur-my-count').textContent=n+' photo'+(n>1?'s':'');
-    const grid=document.getElementById('couleur-my-grid');
-    grid.innerHTML=n?myCouleurPhotos.map((p,i)=>`<div style="position:relative"><img src="${p.url}" onclick="viewCouleurPhoto('${p.url}')"><button onclick="deleteCouleurPhoto(${i})" style="position:absolute;top:3px;right:3px;background:rgba(0,0,0,0.6);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:11px;cursor:pointer;">x</button></div>`).join(''):'<div style="grid-column:1/-1;font-size:13px;color:var(--text3);text-align:center;padding:2rem 0">Appuie sur 📷 pour ajouter ta première photo !</div>';
-  }
-}
-
-window.selectCouleur=function(i){_selectedCouleurIdx=i;renderCouleurScreen();};
-
-window.confirmCouleur=async function(){
-  if(_selectedCouleurIdx===null)return;
-  myCouleur=COULEURS[_selectedCouleurIdx]; myCouleurPhotos=[];
-  try{setSyncing();await setDoc(couleurDoc(),{name:myCouleur.name,hex:myCouleur.hex,photos:[],displayName:currentUser.displayName||'Moi',updatedAt:Date.now()});setSynced();}
-  catch(e){setSyncError();}
-  renderCouleurScreen();
-};
-
-window.toggleCouleurAddBtns=function(){
-  const el=document.getElementById('couleur-add-btns');
-  el.style.display=el.style.display==='flex'?'none':'flex';
-};
-
-window.uploadCouleurPhoto=async function(input){
-  const file=input.files[0]; if(!file)return;
-  document.getElementById('couleur-add-btns').style.display='none';
-  try{
-    setSyncing();
-    const sr=ref(storage,`couleurs/${currentUser.uid}/${Date.now()}.jpg`);
-    await uploadBytes(sr,file);
-    const url=await getDownloadURL(sr);
-    myCouleurPhotos.push({url});
-    const {setDoc:fsd}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    await fsd(couleurDoc(),{name:myCouleur.name,hex:myCouleur.hex,photos:myCouleurPhotos,displayName:currentUser.displayName||'Moi',updatedAt:Date.now()});
-    setSynced(); input.value=''; renderCouleurScreen();
-  }catch(e){setSyncError();}
-};
-
-window.deleteCouleurPhoto=async function(i){
-  if(!confirm('Supprimer cette photo ?'))return;
-  myCouleurPhotos.splice(i,1);
-  try{
-    const {setDoc:fsd}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    await fsd(couleurDoc(),{name:myCouleur.name,hex:myCouleur.hex,photos:myCouleurPhotos,displayName:currentUser.displayName||'Moi',updatedAt:Date.now()});
-  }catch(e){}
-  renderCouleurScreen();
-};
-
-window.viewCouleurPhoto=function(url){
-  document.getElementById('file-preview-content').innerHTML=`<img src="${url}" style="width:100%">`;
-  document.getElementById('file-modal-title').textContent='Photo couleur';
-  document.getElementById('file-modal').classList.add('open');
-};
-
-window.showReveal=async function(){
-  document.getElementById('couleur-step-gallery').style.display='none';
-  document.getElementById('couleur-step-reveal').style.display='block';
-  const content=document.getElementById('reveal-content');
-  content.innerHTML='<div style="text-align:center;padding:2rem;color:var(--text3)">Chargement...</div>';
-  try{
-    const {getDocs,collection:col}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    const snap=await getDocs(col(db,'trips','andalousie-2026','couleurs'));
-    const users=snap.docs.map(d=>d.data());
-    if(!users.length){content.innerHTML='<div style="text-align:center;padding:2rem;color:var(--text3)">Aucune galerie disponible</div>';return;}
-    content.innerHTML='<div style="text-align:center;margin-bottom:1.5rem"><div style="font-size:32px">✨</div><div style="font-size:16px;font-weight:700;color:var(--text);margin-top:6px">Révélation !</div></div>'+
-      users.map(u=>{
-        const name=(u.displayName||'Voyageuse').split(' ')[0];
-        const photos=u.photos||[];
-        return `<div class="reveal-section"><div class="reveal-title"><div class="reveal-dot" style="background:${u.hex}"></div>${name} — ${u.name} (${photos.length} photo${photos.length>1?'s':''})</div>${photos.length?`<div class="reveal-grid">${photos.map(p=>`<img src="${p.url}">`).join('')}</div>`:'<div style="font-size:13px;color:var(--text3);padding:.5rem 0">Pas encore de photos</div>'}</div>`;
-      }).join('<hr style="border:none;border-top:1px solid var(--border);margin:1rem 0">');
-  }catch(e){content.innerHTML='<div style="text-align:center;padding:2rem;color:var(--red)">Erreur de chargement</div>';}
 };
 
 </script>
