@@ -252,6 +252,26 @@ button{font-family:inherit;cursor:pointer;}
 .confirm-btn.safe{background:var(--orange);color:#fff;border-color:var(--orange);}
 
 /* NAV */
+/* SURPRISES */
+.surprise-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;overflow:hidden;}
+.surprise-unlocked{padding:1rem;}
+.surprise-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.surprise-emoji{font-size:28px;}
+.surprise-title{font-size:15px;font-weight:700;color:var(--text);}
+.surprise-badge{font-size:11px;padding:2px 8px;border-radius:20px;background:var(--green-l);color:var(--green);font-weight:600;margin-top:2px;display:inline-block;}
+.surprise-defi{background:var(--orange-l);border-radius:var(--rs);padding:10px 12px;font-size:13px;color:var(--orange-d);line-height:1.6;font-style:italic;}
+.surprise-admin-bar{background:var(--purple-l);border-top:1px solid #AFA9EC;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;}
+.surprise-admin-label{font-size:12px;color:var(--purple);font-weight:600;}
+.surprise-toggle-btn{font-size:12px;padding:5px 12px;border-radius:20px;border:none;font-weight:700;cursor:pointer;}
+.surprise-toggle-btn.activate{background:var(--green);color:#fff;}
+.surprise-toggle-btn.deactivate{background:var(--red-l);color:var(--red);}
+/* Admin panel */
+.admin-panel{background:var(--purple-l);border:1px solid #AFA9EC;border-radius:var(--r);padding:1rem;margin-bottom:1rem;}
+.admin-panel h4{font-size:13px;font-weight:700;color:var(--purple);margin-bottom:10px;}
+.admin-item{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(175,169,236,0.3);}
+.admin-item:last-child{border-bottom:none;}
+.admin-item-label{font-size:13px;color:var(--purple);display:flex;align-items:center;gap:6px;}
+
 .nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--card);border-top:1px solid var(--border);display:flex;padding:8px 0 max(14px,env(safe-area-inset-bottom));z-index:100;}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;color:var(--text3);font-size:10px;font-weight:600;}
 .nav-icon{font-size:22px;line-height:1;}
@@ -410,6 +430,13 @@ button{font-family:inherit;cursor:pointer;}
 <div class="screen" id="screen-fun">
   <div class="page-header"><h2>🎉 Fun</h2><p>Jeux & espagnol pour la route</p></div>
   <div class="page-body">
+    <!-- Surprises - visible only when at least one is active, or for admin -->
+    <div id="surprises-section" style="display:none">
+      <div class="fun-section">
+        <h3>🎁 Surprises</h3>
+        <div id="surprises-list"></div>
+      </div>
+    </div>
     <div class="fun-section">
       <h3>🎯 Bingo du voyage</h3>
       <div class="bingo-win" id="bingo-win">🎉 BINGO ! Vous avez gagné !</div>
@@ -538,6 +565,7 @@ onAuthStateChanged(auth, user => {
     document.getElementById('user-avatar').src=user.photoURL||'';
     initListeners();
     initBingo();
+    initSurprises();
   } else {
     document.getElementById('loading-screen').style.display='none';
     document.getElementById('login-screen').style.display='flex';
@@ -1015,6 +1043,98 @@ window.showScreen=function(name){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   const nav=document.getElementById('nav-'+name);if(nav)nav.classList.add('active');
   window.scrollTo(0,0);
+};
+
+// SURPRISES
+const ADMIN_EMAIL='jaussaud.anais@gmail.com';
+const isAdmin=()=>currentUser&&currentUser.email===ADMIN_EMAIL;
+
+const SURPRISES=[
+  {id:'couleurs',  emoji:'🎨', title:'Défi Couleurs',    defi:'Trouve et photographie quelque chose qui te rend heureuse dans cette ville. Montre-la moi.'},
+  {id:'table',     emoji:'🍽', title:'Table secrète',     defi:'Commande un plat au hasard sur la carte sans regarder ce que c\u2019est. Si tu le finis, la surprise est \u00e0 toi\u00a0!'},
+  {id:'flamenco',  emoji:'💃', title:'Momento Flamenco',  defi:'Danse 30 secondes en public, n\u2019importe o\u00f9, et fais-toi filmer par un inconnu.'},
+  {id:'espagnol',  emoji:'🗣', title:'Full Espa\u00f1ol', defi:'Passe une heure compl\u00e8te \u00e0 parler uniquement en espagnol \u2014 m\u00eame le charabia compte\u00a0!'},
+  {id:'sunrise',   emoji:'🌅', title:'Lever de soleil',   defi:'R\u00e9veille-toi avant le soleil, trouve un beau spot et envoie-moi une photo du lever.'},
+  {id:'lettre',    emoji:'💌', title:'Lettre du voyage',  defi:'\u00c9cris une vraie lettre \u00e0 la main \u00e0 quelqu\u2019un que tu aimes, trouve un bureau de poste et envoie-la.'},
+];
+
+let surprisesState={};
+const surprisesDoc=()=>doc(db,'trips','andalousie-2026','surprises','state');
+
+function initSurprises(){
+  onSnapshot(surprisesDoc(), snap=>{
+    surprisesState=snap.exists()?snap.data():{};
+    renderSurprises();
+  });
+}
+
+function renderSurprises(){
+  const section=document.getElementById('surprises-section');
+  const list=document.getElementById('surprises-list');
+  if(!section||!list)return;
+
+  const anyActive=SURPRISES.some(s=>surprisesState[s.id]);
+
+  // Admin sees section always; non-admin only if at least one active
+  if(!isAdmin()&&!anyActive){
+    section.style.display='none';
+    return;
+  }
+  section.style.display='block';
+
+  // Admin: show control panel + active surprises
+  if(isAdmin()){
+    const adminHtml=`<div class="admin-panel">
+      <h4>👑 Panneau admin — activer les surprises</h4>
+      ${SURPRISES.map(s=>{
+        const on=!!surprisesState[s.id];
+        return `<div class="admin-item">
+          <span class="admin-item-label">${s.emoji} ${s.title}</span>
+          <button class="surprise-toggle-btn ${on?'deactivate':'activate'}"
+            onclick="toggleSurprise('${s.id}',${!on})">
+            ${on?'🔒 Désactiver':'🔓 Activer'}
+          </button>
+        </div>`;
+      }).join('')}
+    </div>`;
+
+    // Active surprises shown below admin panel
+    const activeHtml=SURPRISES.filter(s=>surprisesState[s.id]).map(s=>`
+      <div class="surprise-card">
+        <div class="surprise-unlocked">
+          <div class="surprise-header">
+            <span class="surprise-emoji">${s.emoji}</span>
+            <div><div class="surprise-title">${s.title}</div>
+            <span class="surprise-badge">✨ Active</span></div>
+          </div>
+          <div class="surprise-defi">${s.defi}</div>
+        </div>
+      </div>`).join('');
+
+    list.innerHTML=adminHtml+(activeHtml||`<div style="font-size:13px;color:var(--text3);text-align:center;padding:1rem 0">Aucune surprise active pour l\u2019instant</div>`);
+  } else {
+    // Non-admin: show only active surprises
+    list.innerHTML=SURPRISES.filter(s=>surprisesState[s.id]).map(s=>`
+      <div class="surprise-card">
+        <div class="surprise-unlocked">
+          <div class="surprise-header">
+            <span class="surprise-emoji">${s.emoji}</span>
+            <div><div class="surprise-title">${s.title}</div>
+            <span class="surprise-badge">✨ Débloquée !</span></div>
+          </div>
+          <div class="surprise-defi">${s.defi}</div>
+        </div>
+      </div>`).join('');
+  }
+}
+
+window.toggleSurprise=async function(id,activate){
+  surprisesState[id]=activate;
+  try{
+    setSyncing();
+    await setDoc(surprisesDoc(),surprisesState);
+    setSynced();
+  }catch(e){setSyncError();}
 };
 
 </script>
