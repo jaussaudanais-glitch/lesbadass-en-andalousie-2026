@@ -1119,6 +1119,8 @@ window.showScreen=function(name){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   const nav=document.getElementById('nav-'+name);if(nav)nav.classList.add('active');
   window.scrollTo(0,0);
+  if(name==='city')renderPois();
+  if(name==='couleurs')initCouleurs();
 };
 
 // SURPRISES
@@ -1334,13 +1336,6 @@ window.showReveal=async function(){
       </div>`;
     }).join('<hr style="border:none;border-top:1px solid var(--border);margin:1rem 0">');
   }catch(e){content.innerHTML='<div style="text-align:center;padding:2rem;color:var(--red)">Erreur de chargement</div>';}
-};
-
-// Init couleurs when screen opens
-const _origShowScreen=window.showScreen;
-window.showScreen=function(name){
-  _origShowScreen(name);
-  if(name==='couleurs') initCouleurs();
 };
 
 
