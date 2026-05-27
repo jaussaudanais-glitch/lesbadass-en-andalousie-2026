@@ -852,18 +852,20 @@ window.confirmBingo=async function(){
 
 window.uncheckedBingo=function(){
   if(_bingoPendingIdx===null)return;
-  bingoState[_bingoPendingIdx].checked=false;
-  bingoState[_bingoPendingIdx].photoUrl=null;
+  const idx=_bingoPendingIdx;
   closeBingoModal();
+  bingoState[idx].checked=false;
+  bingoState[idx].photoUrl=null;
   saveBingoState();
   renderBingo();
 };
 
 window.deleteBingoPhoto=function(){
   if(_bingoPendingIdx===null)return;
-  bingoState[_bingoPendingIdx].photoUrl=null;
-  bingoState[_bingoPendingIdx].checked=false;
+  const idx=_bingoPendingIdx;
   closeBingoModal();
+  bingoState[idx].photoUrl=null;
+  bingoState[idx].checked=false;
   saveBingoState();
   renderBingo();
 };
@@ -1017,4 +1019,4 @@ window.showScreen=function(name){
 
 </script>
 </body>
-</html>  
+</html>
