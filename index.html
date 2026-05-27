@@ -276,6 +276,22 @@ button{font-family:inherit;cursor:pointer;}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;color:var(--text3);font-size:10px;font-weight:600;}
 .nav-icon{font-size:22px;line-height:1;}
 .nav-item.active{color:var(--orange);}
+
+/* SURPRISES */
+.surprise-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;overflow:hidden;}
+.surprise-unlocked{padding:1rem;cursor:pointer;}
+.surprise-header{display:flex;align-items:center;gap:10px;}
+.surprise-emoji{font-size:28px;}
+.surprise-title{font-size:15px;font-weight:700;color:var(--text);}
+.surprise-badge{font-size:11px;padding:2px 8px;border-radius:20px;background:var(--green-l);color:var(--green);font-weight:600;display:inline-block;margin-top:2px;}
+.admin-panel{background:var(--purple-l);border:1px solid #AFA9EC;border-radius:var(--r);padding:1rem;margin-bottom:10px;}
+.admin-panel h4{font-size:13px;font-weight:700;color:var(--purple);margin-bottom:10px;}
+.admin-item{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(175,169,236,0.3);}
+.admin-item:last-child{border-bottom:none;}
+.admin-item-label{font-size:13px;color:var(--purple);display:flex;align-items:center;gap:6px;}
+.surprise-toggle-btn{font-size:12px;padding:5px 12px;border-radius:20px;border:none;font-weight:700;cursor:pointer;}
+.surprise-toggle-btn.activate{background:var(--green);color:#fff;}
+.surprise-toggle-btn.deactivate{background:var(--red-l);color:var(--red);}
 </style>
 </head>
 <body>
@@ -437,6 +453,7 @@ button{font-family:inherit;cursor:pointer;}
         <div id="surprises-list"></div>
       </div>
     </div>
+    <div id="surprises-section" style="display:none"><div class="fun-section"><h3>🎁 Surprises</h3><div id="surprises-list"></div></div></div>
     <div class="fun-section">
       <h3>🎯 Bingo du voyage</h3>
       <div class="bingo-win" id="bingo-win">🎉 BINGO ! Vous avez gagné !</div>
@@ -1135,6 +1152,64 @@ window.toggleSurprise=async function(id,activate){
   try{
     setSyncing();
     await setDoc(surprisesDoc(),surprisesState);
+    setSynced();
+  }catch(e){setSyncError();}
+};
+
+// SURPRISES
+const ADMIN_EMAIL='jaussaud.anais@gmail.com';
+const isAdmin=()=>currentUser&&currentUser.email===ADMIN_EMAIL;
+const SURPRISES=[
+  {id:'couleurs',emoji:'🎨',title:'Défi Couleurs'},
+];
+let surprisesState={};
+
+function initSurprises(){
+  const sd=doc(db,'trips','andalousie-2026','surprises','state');
+  onSnapshot(sd, snap=>{
+    surprisesState=snap.exists()?snap.data():{};
+    renderSurprises();
+  }, err=>console.log('surprises err',err));
+}
+
+function renderSurprises(){
+  const section=document.getElementById('surprises-section');
+  const list=document.getElementById('surprises-list');
+  if(!section||!list)return;
+  const anyActive=SURPRISES.some(s=>surprisesState[s.id]);
+  if(!isAdmin()&&!anyActive){section.style.display='none';return;}
+  section.style.display='block';
+  if(isAdmin()){
+    const adminHtml='<div class="admin-panel"><h4>👑 Panneau admin</h4>'+
+      SURPRISES.map(s=>{
+        const on=!!surprisesState[s.id];
+        return '<div class="admin-item">'+
+          '<span class="admin-item-label">'+s.emoji+' '+s.title+'</span>'+
+          '<button class="surprise-toggle-btn '+(on?'deactivate':'activate')+'" onclick="toggleSurprise(''+s.id+'','+(!on)+')">'+
+          (on?'🔒 Désactiver':'🔓 Activer')+'</button></div>';
+      }).join('')+'</div>';
+    const activeHtml=SURPRISES.filter(s=>surprisesState[s.id]).map(s=>
+      '<div class="surprise-card"><div class="surprise-unlocked">'+
+      '<div class="surprise-header"><span class="surprise-emoji">'+s.emoji+'</span>'+
+      '<div><div class="surprise-title">'+s.title+'</div>'+
+      '<span class="surprise-badge">✨ Active</span></div></div></div></div>'
+    ).join('');
+    list.innerHTML=adminHtml+(activeHtml||'<div style="font-size:13px;color:var(--text3);text-align:center;padding:1rem 0">Aucune surprise active</div>');
+  } else {
+    list.innerHTML=SURPRISES.filter(s=>surprisesState[s.id]).map(s=>
+      '<div class="surprise-card"><div class="surprise-unlocked">'+
+      '<div class="surprise-header"><span class="surprise-emoji">'+s.emoji+'</span>'+
+      '<div><div class="surprise-title">'+s.title+'</div>'+
+      '<span class="surprise-badge">✨ Débloquée !</span></div></div></div></div>'
+    ).join('');
+  }
+}
+
+window.toggleSurprise=async function(id,activate){
+  surprisesState[id]=activate;
+  try{
+    setSyncing();
+    await setDoc(doc(db,'trips','andalousie-2026','surprises','state'),surprisesState);
     setSynced();
   }catch(e){setSyncError();}
 };
