@@ -862,6 +862,7 @@ window.uncheckedBingo=function(){
 window.deleteBingoPhoto=function(){
   if(_bingoPendingIdx===null)return;
   bingoState[_bingoPendingIdx].photoUrl=null;
+  bingoState[_bingoPendingIdx].checked=false;
   closeBingoModal();
   saveBingoState();
   renderBingo();
@@ -885,8 +886,125 @@ const defis=["Demande un café en espagnol et engage la conversation ! ☕","Pre
 window.newDefi=()=>document.getElementById('defi-text').textContent=defis[Math.floor(Math.random()*defis.length)];
 
 // DICO
-const dico=[{es:"Hola",fr:"Bonjour / Salut",ph:"o-la"},{es:"Gracias",fr:"Merci",ph:"gra-sias"},{es:"Por favor",fr:"S'il vous plaît",ph:"por fa-vor"},{es:"Perdona",fr:"Excusez-moi",ph:"per-do-na"},{es:"¿Dónde está…?",fr:"Où est… ?",ph:"don-de es-ta"},{es:"¿Cuánto cuesta?",fr:"Combien ça coûte ?",ph:"kwan-to kwes-ta"},{es:"La cuenta",fr:"L'addition",ph:"la kwen-ta"},{es:"¿Hay mesa libre?",fr:"Y a-t-il une table libre ?",ph:"ai me-sa li-bre"},{es:"Sin gluten",fr:"Sans gluten",ph:"sin glu-ten"},{es:"Vegetariano",fr:"Végétarien",ph:"ve-he-ta-ria-no"},{es:"Una cerveza",fr:"Une bière",ph:"u-na ser-ve-sa"},{es:"Vino tinto / blanco",fr:"Vin rouge / blanc",ph:"vi-no tin-to/blan-ko"},{es:"Agua con gas",fr:"Eau gazeuse",ph:"a-gwa kon gas"},{es:"El baño",fr:"Les toilettes",ph:"el ba-nyo"},{es:"Ayuda",fr:"Aide / Au secours",ph:"a-yu-da"},{es:"Mecánico",fr:"Mécanicien",ph:"me-ka-ni-ko"},{es:"Gasolinera",fr:"Station essence",ph:"ga-so-li-ne-ra"},{es:"Camping",fr:"Camping",ph:"kam-ping"},{es:"Aparcamiento",fr:"Parking",ph:"a-par-ka-mien-to"},{es:"Playa",fr:"Plage",ph:"pla-ya"},{es:"Montaña",fr:"Montagne",ph:"mon-ta-nya"},{es:"Sendero",fr:"Sentier de randonnée",ph:"sen-de-ro"},{es:"Farmacia",fr:"Pharmacie",ph:"far-ma-sia"},{es:"Hospital",fr:"Hôpital",ph:"os-pi-tal"},{es:"Policía",fr:"Police",ph:"po-li-sia"},{es:"¡Qué bonito!",fr:"Que c'est beau !",ph:"ke bo-ni-to"},{es:"Delicioso",fr:"Délicieux",ph:"de-li-sio-so"},{es:"Hace calor",fr:"Il fait chaud",ph:"a-se ka-lor"},{es:"Estoy perdida",fr:"Je suis perdue",ph:"es-toy per-di-da"},{es:"¿Hablas francés?",fr:"Tu parles français ?",ph:"a-blas fran-ses"},{es:"No entiendo",fr:"Je ne comprends pas",ph:"no en-tien-do"},{es:"Más despacio",fr:"Plus lentement",ph:"mas des-pa-sio"},{es:"Un poco",fr:"Un peu",ph:"un po-ko"},{es:"Izquierda / Derecha",fr:"Gauche / Droite",ph:"is-kier-da/de-re-cha"},{es:"Todo recto",fr:"Tout droit",ph:"to-do rek-to"},{es:"Abierto / Cerrado",fr:"Ouvert / Fermé",ph:"a-bier-to/se-ra-do"},{es:"Mañana",fr:"Demain / Matin",ph:"ma-nya-na"},{es:"Hoy",fr:"Aujourd'hui",ph:"oi"},{es:"¡Salud!",fr:"Santé !",ph:"sa-lud"},{es:"¡Hasta luego!",fr:"À bientôt !",ph:"as-ta lwe-go"}];
-window.searchDico=function(q){const r=document.getElementById('dico-results');const query=q.toLowerCase().trim();if(!query){r.innerHTML='<div class="dico-empty">Tape un mot pour chercher 🔍</div>';return;}const f=dico.filter(d=>d.es.toLowerCase().includes(query)||d.fr.toLowerCase().includes(query));if(!f.length){r.innerHTML=`<div class="dico-empty">Aucun résultat pour "${q}"</div>`;return;}r.innerHTML=f.map(d=>`<div class="dico-item"><div><div class="dico-es">${d.es}</div><div class="dico-phon">${d.ph}</div></div><div class="dico-fr">${d.fr}</div></div>`).join('');};
+const dicoCategories=[
+  {label:"👋 Bases",items:[
+    {es:"Hola",fr:"Bonjour / Salut",ph:"o-la"},
+    {es:"Buenos días",fr:"Bonjour (matin)",ph:"bwe-nos di-as"},
+    {es:"Buenas tardes",fr:"Bonsoir",ph:"bwe-nas tar-des"},
+    {es:"Buenas noches",fr:"Bonne nuit",ph:"bwe-nas no-ches"},
+    {es:"Gracias",fr:"Merci",ph:"gra-sias"},
+    {es:"Muchas gracias",fr:"Merci beaucoup",ph:"mu-chas gra-sias"},
+    {es:"De nada",fr:"De rien",ph:"de na-da"},
+    {es:"Por favor",fr:"S'il vous plaît",ph:"por fa-vor"},
+    {es:"Perdona / Disculpa",fr:"Excusez-moi / Pardon",ph:"per-do-na"},
+    {es:"Lo siento",fr:"Je suis désolée",ph:"lo sien-to"},
+    {es:"Sí / No",fr:"Oui / Non",ph:"si/no"},
+    {es:"Vale",fr:"D'accord / OK",ph:"ba-le"},
+    {es:"Adiós",fr:"Au revoir",ph:"a-dios"},
+    {es:"¡Hasta luego!",fr:"À bientôt !",ph:"as-ta lwe-go"},
+  ]},
+  {label:"🗣 Conversation",items:[
+    {es:"¿Cómo estás?",fr:"Comment vas-tu ?",ph:"ko-mo es-tas"},
+    {es:"Muy bien, ¿y tú?",fr:"Très bien, et toi ?",ph:"mui bien i tu"},
+    {es:"¿Hablas francés?",fr:"Tu parles français ?",ph:"a-blas fran-ses"},
+    {es:"No entiendo",fr:"Je ne comprends pas",ph:"no en-tien-do"},
+    {es:"¿Puedes repetir?",fr:"Tu peux répéter ?",ph:"pwe-des re-pe-tir"},
+    {es:"Más despacio",fr:"Plus lentement",ph:"mas des-pa-sio"},
+    {es:"Un poco",fr:"Un peu",ph:"un po-ko"},
+    {es:"No sé",fr:"Je ne sais pas",ph:"no se"},
+    {es:"Me llamo…",fr:"Je m'appelle…",ph:"me ya-mo"},
+    {es:"Soy francesa",fr:"Je suis française",ph:"soi fran-se-sa"},
+  ]},
+  {label:"🗺 Orientation",items:[
+    {es:"¿Dónde está…?",fr:"Où est… ?",ph:"don-de es-ta"},
+    {es:"¿Cómo llego a…?",fr:"Comment aller à… ?",ph:"ko-mo ye-go a"},
+    {es:"Izquierda",fr:"Gauche",ph:"is-kier-da"},
+    {es:"Derecha",fr:"Droite",ph:"de-re-cha"},
+    {es:"Todo recto",fr:"Tout droit",ph:"to-do rek-to"},
+    {es:"Cerca / Lejos",fr:"Près / Loin",ph:"ser-ka/le-hos"},
+    {es:"La salida",fr:"La sortie",ph:"la sa-li-da"},
+    {es:"Estoy perdida",fr:"Je suis perdue",ph:"es-toy per-di-da"},
+  ]},
+  {label:"🏨 Hébergement",items:[
+    {es:"Tengo una reserva",fr:"J'ai une réservation",ph:"ten-go u-na re-ser-ba"},
+    {es:"¿A qué hora es el check-out?",fr:"À quelle heure est le check-out ?",ph:"a ke o-ra es el chek-aut"},
+    {es:"La habitación",fr:"La chambre",ph:"la a-bi-ta-sion"},
+    {es:"La llave",fr:"La clé",ph:"la ya-be"},
+    {es:"¿Hay wifi?",fr:"Y a-t-il le wifi ?",ph:"ai wi-fi"},
+    {es:"Aparcamiento",fr:"Parking",ph:"a-par-ka-mien-to"},
+  ]},
+  {label:"🍽 Resto & Bar",items:[
+    {es:"Una mesa para dos",fr:"Une table pour deux",ph:"u-na me-sa pa-ra dos"},
+    {es:"La carta / El menú",fr:"La carte / Le menu",ph:"la kar-ta/el me-nu"},
+    {es:"¿Qué recomienda?",fr:"Que recommandez-vous ?",ph:"ke re-ko-mien-da"},
+    {es:"La cuenta",fr:"L'addition",ph:"la kwen-ta"},
+    {es:"Sin gluten",fr:"Sans gluten",ph:"sin glu-ten"},
+    {es:"Vegetariano/a",fr:"Végétarien(ne)",ph:"ve-he-ta-ria-no"},
+    {es:"Una cerveza",fr:"Une bière",ph:"u-na ser-ve-sa"},
+    {es:"Vino tinto / blanco",fr:"Vin rouge / blanc",ph:"vi-no tin-to/blan-ko"},
+    {es:"Agua con gas / sin gas",fr:"Eau gazeuse / plate",ph:"a-gwa kon/sin gas"},
+    {es:"Un café solo",fr:"Un café serré",ph:"un ka-fe so-lo"},
+    {es:"El baño",fr:"Les toilettes",ph:"el ba-nyo"},
+    {es:"¡Salud!",fr:"Santé !",ph:"sa-lud"},
+    {es:"Delicioso",fr:"Délicieux",ph:"de-li-sio-so"},
+    {es:"Está muy rico",fr:"C'est très bon",ph:"es-ta mui ri-ko"},
+    {es:"¡Que aproveche!",fr:"Bon appétit !",ph:"ke a-pro-be-che"},
+  ]},
+  {label:"🚐 Transport & Van",items:[
+    {es:"Gasolinera",fr:"Station essence",ph:"ga-so-li-ne-ra"},
+    {es:"Lleno, por favor",fr:"Le plein, s'il vous plaît",ph:"ye-no por fa-bor"},
+    {es:"Mecánico",fr:"Mécanicien",ph:"me-ka-ni-ko"},
+    {es:"Una avería",fr:"Une panne",ph:"u-na a-be-ria"},
+    {es:"El neumático",fr:"Le pneu",ph:"el neu-ma-ti-ko"},
+    {es:"¿Dónde puedo aparcar?",fr:"Où puis-je me garer ?",ph:"don-de pwe-do a-par-kar"},
+    {es:"El peaje",fr:"Le péage",ph:"el pe-a-he"},
+    {es:"Camping",fr:"Camping",ph:"kam-ping"},
+    {es:"Sendero",fr:"Sentier de randonnée",ph:"sen-de-ro"},
+  ]},
+  {label:"🏥 Urgences",items:[
+    {es:"¡Ayuda!",fr:"Au secours !",ph:"a-yu-da"},
+    {es:"Llame a la policía",fr:"Appelez la police",ph:"ya-me a la po-li-sia"},
+    {es:"Llame a una ambulancia",fr:"Appelez une ambulance",ph:"ya-me a-na am-bu-lan-sia"},
+    {es:"Me han robado",fr:"On m'a volée",ph:"me an ro-ba-do"},
+    {es:"Estoy enferma",fr:"Je suis malade",ph:"es-toy en-fer-ma"},
+    {es:"Me duele…",fr:"J'ai mal à…",ph:"me dwe-le"},
+    {es:"La farmacia",fr:"La pharmacie",ph:"la far-ma-sia"},
+    {es:"El hospital",fr:"L'hôpital",ph:"el os-pi-tal"},
+  ]},
+  {label:"😄 Argot & Fun",items:[
+    {es:"¡Guay!",fr:"Super ! Trop cool !",ph:"gwa-i"},
+    {es:"¡Mola mucho!",fr:"C'est trop bien !",ph:"mo-la mu-cho"},
+    {es:"¡Qué rollo!",fr:"Quelle galère !",ph:"ke ro-yo"},
+    {es:"Tío / Tía",fr:"Mec / Meuf (familier)",ph:"ti-o/ti-a"},
+    {es:"¡Venga!",fr:"Allez ! / Vas-y !",ph:"ben-ga"},
+    {es:"¿Qué pasa?",fr:"Quoi de neuf ?",ph:"ke pa-sa"},
+    {es:"Me flipa",fr:"J'hallucine / c'est dingue",ph:"me fli-pa"},
+    {es:"¡Qué chulo/a!",fr:"Trop beau / trop sympa !",ph:"ke chu-lo/a"},
+    {es:"¡Hostia!",fr:"Putain ! (surprise)",ph:"os-tia"},
+    {es:"¡Olé!",fr:"Bravo ! Magnifique !",ph:"o-le"},
+    {es:"Ir de tapas",fr:"Aller de bar en bar manger des tapas",ph:"ir de ta-pas"},
+    {es:"Echarse una siesta",fr:"Faire une sieste",ph:"e-char-se u-na sies-ta"},
+    {es:"¡Qué calor!",fr:"Quelle chaleur !",ph:"ke ka-lor"},
+    {es:"Estar hecho polvo",fr:"Être épuisée / crevée",ph:"es-tar e-cho pol-bo"},
+  ]},
+];
+const dico = dicoCategories.flatMap(c => c.items);
+
+window.searchDico=function(q){
+  const r=document.getElementById('dico-results');
+  const query=q.toLowerCase().trim();
+  if(!query){
+    // Show all categories
+    r.innerHTML=dicoCategories.map(cat=>
+      `<div style="padding:7px 14px;background:var(--bg);border-bottom:1px solid var(--border);font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.5px">${cat.label}</div>`+
+      cat.items.map(d=>`<div class="dico-item"><div><div class="dico-es">${d.es}</div><div class="dico-phon">${d.ph}</div></div><div class="dico-fr">${d.fr}</div></div>`).join('')
+    ).join('');
+    return;
+  }
+  const f=dico.filter(d=>d.es.toLowerCase().includes(query)||d.fr.toLowerCase().includes(query));
+  if(!f.length){r.innerHTML=`<div class="dico-empty">Aucun résultat pour "${q}"</div>`;return;}
+  r.innerHTML=f.map(d=>`<div class="dico-item"><div><div class="dico-es">${d.es}</div><div class="dico-phon">${d.ph}</div></div><div class="dico-fr">${d.fr}</div></div>`).join('');
+};
 
 // NAV
 window.showScreen=function(name){
@@ -899,4 +1017,4 @@ window.showScreen=function(name){
 
 </script>
 </body>
-</html>
+</html>  
