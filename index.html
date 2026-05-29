@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Andalousie">
-<title>☀️Andalousie 2026</title>
+<title>☀️ Andalousie 2026</title>
 <style>
 :root{
   --orange:#B85A30;--orange-l:#FAECE7;--orange-d:#993C1D;
@@ -1078,14 +1078,8 @@ const SURPRISES=[
 ];
 
 let surprisesState={};
-const surprisesDoc=()=>doc(db,'trips','andalousie-2026','surprises','state');
 
-function initSurprises(){
-  onSnapshot(surprisesDoc(), snap=>{
-    surprisesState=snap.exists()?snap.data():{};
-    renderSurprises();
-  });
-}
+
 
 function renderSurprises(){
   const section=document.getElementById('surprises-section');
@@ -1166,10 +1160,12 @@ let surprisesState={};
 
 function initSurprises(){
   const sd=doc(db,'trips','andalousie-2026','surprises','state');
-  onSnapshot(sd, snap=>{
-    surprisesState=snap.exists()?snap.data():{};
-    renderSurprises();
-  }, err=>console.log('surprises err',err));
+  import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js').then(({getDoc})=>{
+    getDoc(sd).then(snap=>{
+      surprisesState=snap.exists()?snap.data():{};
+      renderSurprises();
+    }).catch(e=>console.log('surprises load err',e));
+  });
 }
 
 function renderSurprises(){
